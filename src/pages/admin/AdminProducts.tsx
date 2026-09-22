@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
+import { Package, Edit2, Trash2 } from 'lucide-react';
 
 export default function AdminProducts() {
   const queryClient = useQueryClient();
@@ -211,7 +212,7 @@ export default function AdminProducts() {
                       <button onClick={() => openModal(p)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors">
                         <Edit2 size={18} />
                       </button>
-                      <button onClick={() => deleteProduct.mutate(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
+                      <button onClick={() => handleDelete(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
                         <Trash2 size={18} />
                       </button>
                     </div>
