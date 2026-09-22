@@ -17,7 +17,7 @@ export default function Home() {
     }
   });
 
-  const { data: settings } = useQuery({
+  const { data: settings, isLoading: isSettingsLoading } = useQuery({
     queryKey: ['settings'],
     queryFn: async () => {
       const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`);
@@ -27,12 +27,12 @@ export default function Home() {
 
   const featuredProducts = products ? products.slice(0, 8) : [];
 
-  // Resolve settings with fallbacks
-  const heroImage = settings?.hero_image_url || DEFAULT_HERO_IMAGE;
+  // Resolve settings with fallbacks, but prevent flashing default images while loading
+  const heroImage = isSettingsLoading ? undefined : (settings?.hero_image_url || DEFAULT_HERO_IMAGE);
   const promoTitle = settings?.promo_title || 'Weekend Special.\nUp to 30% Off.';
   const promoSubtitle = settings?.promo_subtitle || 'Upgrade your wardrobe with our latest arrivals. Limited time offer exclusively online.';
   const promoLink = settings?.promo_link || '/shop?sale=true';
-  const promoImage = settings?.promo_image_url || DEFAULT_PROMO_IMAGE;
+  const promoImage = isSettingsLoading ? undefined : (settings?.promo_image_url || DEFAULT_PROMO_IMAGE);
 
   // Custom offer settings
   const offerEnabled = settings?.offer_enabled !== 'false';
@@ -49,13 +49,15 @@ export default function Home() {
     <div className="flex flex-col pb-0">
       {/* Hero Section */}
       <section className="relative h-[90vh] min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src={heroImage} 
-            alt="Barakah Collection" 
-            className="w-full h-full object-cover object-center scale-105"
-            loading="eager"
-          />
+        <div className="absolute inset-0 z-0 bg-zinc-900">
+          {heroImage && (
+            <img 
+              src={heroImage} 
+              alt="Barakah Collection" 
+              className="w-full h-full object-cover object-center scale-105"
+              loading="eager"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-3xl mx-auto flex flex-col items-center">
@@ -227,13 +229,15 @@ export default function Home() {
               </Link>
             </div>
           </div>
-          <div className="flex-1 w-full md:w-auto min-h-[280px] md:min-h-full">
-            <img 
-              src={promoImage} 
-              alt="Promo" 
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
+          <div className="flex-1 w-full md:w-auto min-h-[280px] md:min-h-full bg-zinc-800">
+            {promoImage && (
+              <img 
+                src={promoImage} 
+                alt="Promo" 
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            )}
           </div>
         </div>
       </section>
