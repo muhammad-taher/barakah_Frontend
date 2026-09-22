@@ -10,7 +10,7 @@ export default function AdminLogin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://127.0.0.1:5000/api/v1/auth/login', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/auth/login`, {
         username,
         password
       });

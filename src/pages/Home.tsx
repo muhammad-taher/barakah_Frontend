@@ -12,7 +12,7 @@ export default function Home() {
   const { data: products } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/products/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`);
       return res.data;
     }
   });
@@ -20,7 +20,7 @@ export default function Home() {
   const { data: settings } = useQuery({
     queryKey: ['settings'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/settings/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`);
       return res.data;
     }
   });

@@ -35,7 +35,7 @@ export default function Checkout() {
     try {
       const items = cartItems.map(item => ({ product_id: Number(item.id), quantity: item.quantity }));
       const fullAddress = `${address}, ${area}, ${district}, ${division}`;
-      const res = await axios.post('http://127.0.0.1:5000/api/v1/orders/checkout', {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/orders/checkout`, {
         customer_name: name,
         phone,
         address: fullAddress,

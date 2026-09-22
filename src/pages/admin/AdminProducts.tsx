@@ -28,7 +28,7 @@ export default function AdminProducts() {
     
     setIsUploading(true);
     try {
-      const res = await axios.post('http://127.0.0.1:5000/api/v1/upload/', uploadData, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/upload/`, uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFormData(prev => ({ ...prev, image_url: res.data.url }));
@@ -42,14 +42,14 @@ export default function AdminProducts() {
   const { data: products, isLoading } = useQuery({
     queryKey: ['admin_products'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/products/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`);
       return res.data;
     }
   });
 
   const addProduct = useMutation({
     mutationFn: async (newProduct: any) => {
-      return axios.post('http://127.0.0.1:5000/api/v1/products/', newProduct);
+      return axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`, newProduct);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_products'] });
@@ -62,7 +62,7 @@ export default function AdminProducts() {
 
   const updateProduct = useMutation({
     mutationFn: async ({ id, data }: { id: number, data: any }) => {
-      return axios.put(`http://127.0.0.1:5000/api/v1/products/${id}`, data);
+      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_products'] });
@@ -72,7 +72,7 @@ export default function AdminProducts() {
 
   const deleteProduct = useMutation({
     mutationFn: async (id: number) => {
-      return axios.delete(`http://127.0.0.1:5000/api/v1/products/${id}`);
+      return axios.delete(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_products'] });

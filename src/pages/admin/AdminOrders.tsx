@@ -12,7 +12,7 @@ export default function AdminOrders() {
   const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ['admin_orders'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/admin/orders', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;
@@ -21,7 +21,7 @@ export default function AdminOrders() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: number, status: string }) => {
-      return axios.put(`http://127.0.0.1:5000/api/v1/admin/orders/${id}/status`, { status }, {
+      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
     },

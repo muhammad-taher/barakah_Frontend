@@ -26,7 +26,7 @@ export default function AdminSettings() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ['settings'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/settings/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`);
       return res.data;
     }
   });
@@ -61,7 +61,7 @@ export default function AdminSettings() {
     
     setIsUploading(prev => ({ ...prev, [field]: true }));
     try {
-      const res = await axios.post('http://127.0.0.1:5000/api/v1/upload/', uploadData, {
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/upload/`, uploadData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFormData(prev => ({ ...prev, [field]: res.data.url }));
@@ -74,7 +74,7 @@ export default function AdminSettings() {
 
   const updateSettings = useMutation({
     mutationFn: async (newSettings: typeof formData) => {
-      return axios.put('http://127.0.0.1:5000/api/v1/settings/', newSettings, {
+      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`, newSettings, {
         headers: { Authorization: `Bearer ${token}` }
       });
     },

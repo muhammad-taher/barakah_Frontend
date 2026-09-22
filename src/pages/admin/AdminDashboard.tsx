@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   const { data: stats, isLoading, isError, error } = useQuery({
     queryKey: ['admin_dashboard'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/admin/dashboard', {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/dashboard`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;

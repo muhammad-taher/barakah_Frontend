@@ -59,7 +59,7 @@ export default function Header() {
     queryKey: ['search', searchQuery],
     queryFn: async () => {
       if (!searchQuery.trim()) return [];
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/products/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`);
       const products = res.data;
       const q = searchQuery.toLowerCase();
       return products.filter((p: any) =>

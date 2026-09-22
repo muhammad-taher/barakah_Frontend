@@ -15,7 +15,7 @@ export default function Shop() {
   const { data: products, isLoading } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
-      const res = await axios.get('http://127.0.0.1:5000/api/v1/products/');
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`);
       return res.data;
     }
   });
