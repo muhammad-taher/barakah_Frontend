@@ -176,31 +176,58 @@ export default function AdminProducts() {
       )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="p-4 font-semibold text-gray-600">Name</th>
-              <th className="p-4 font-semibold text-gray-600">Slug</th>
-              <th className="p-4 font-semibold text-gray-600">Price</th>
-              <th className="p-4 font-semibold text-gray-600">Stock</th>
-              <th className="p-4 font-semibold text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products?.map((p: any) => (
-              <tr key={p.id} className="border-b hover:bg-gray-50">
-                <td className="p-4 font-medium">{p.name}</td>
-                <td className="p-4 text-sm text-gray-500">{p.slug}</td>
-                <td className="p-4 font-semibold">৳ {p.price}</td>
-                <td className="p-4">{p.stock}</td>
-                <td className="p-4 space-x-2">
-                  <button onClick={() => openModal(p)} className="text-blue-600 hover:underline">Edit</button>
-                  <button onClick={() => handleDelete(p.id)} className="text-red-600 hover:underline">Delete</button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="bg-gray-50 border-b border-gray-100 text-gray-600 text-sm">
+              <tr>
+                <th className="p-4 font-semibold">Image</th>
+                <th className="p-4 font-semibold">Product Name</th>
+                <th className="p-4 font-semibold">Price</th>
+                <th className="p-4 font-semibold">Stock</th>
+                <th className="p-4 font-semibold">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {products?.map((p: any) => (
+                <tr key={p.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="p-4">
+                    {p.image_url ? (
+                      <img src={p.image_url} alt={p.name} className="w-12 h-12 object-cover rounded-md" />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-100 rounded-md flex items-center justify-center text-gray-400">
+                        <Package size={20} />
+                      </div>
+                    )}
+                  </td>
+                  <td className="p-4 font-medium text-gray-800">{p.name}</td>
+                  <td className="p-4 text-gray-600">৳{p.price}</td>
+                  <td className="p-4">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${p.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                      {p.stock} in stock
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex space-x-2">
+                      <button onClick={() => openModal(p)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded transition-colors">
+                        <Edit2 size={18} />
+                      </button>
+                      <button onClick={() => deleteProduct.mutate(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {(!products || products.length === 0) && !isLoading && (
+                <tr>
+                  <td colSpan={5} className="p-8 text-center text-gray-500">
+                    No products found. Add your first product!
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
