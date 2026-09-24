@@ -8,6 +8,8 @@ export default function AdminOrders() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+  const [bulkStatus, setBulkStatus] = useState('Processing');
   
   const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ['admin_orders'],
@@ -28,6 +30,19 @@ export default function AdminOrders() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
       queryClient.invalidateQueries({ queryKey: ['admin_dashboard'] });
+    }
+  });
+
+  const updateBulkStatus = useMutation({
+    mutationFn: async ({ order_ids, status }: { order_ids: number[], status: string }) => {
+      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders/bulk-status`, { order_ids, status }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin_dashboard'] });
+      setSelectedOrders([]);
     }
   });
 
@@ -59,15 +74,40 @@ export default function AdminOrders() {
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className="text-3xl font-bold text-gray-800">Order Management</h2>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search name, phone, or ID..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80"
-          />
+        
+        <div className="flex items-center gap-4 w-full md:w-auto">
+          {selectedOrders.length > 0 && (
+            <div className="flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
+              <span className="text-sm text-blue-700 font-medium px-2">{selectedOrders.length} selected</span>
+              <select 
+                value={bulkStatus}
+                onChange={(e) => setBulkStatus(e.target.value)}
+                className="text-sm border rounded p-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <button 
+                onClick={() => updateBulkStatus.mutate({ order_ids: selectedOrders, status: bulkStatus })}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors"
+                disabled={updateBulkStatus.isPending}
+              >
+                Apply
+              </button>
+            </div>
+          )}
+          <div className="relative flex-1 md:flex-none">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search name, phone, or ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80"
+            />
+          </div>
         </div>
       </div>
 
@@ -76,6 +116,20 @@ export default function AdminOrders() {
           <table className="w-full text-left min-w-[800px]">
             <thead className="bg-gray-50 border-b">
               <tr>
+                <th className="p-4 w-12">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-gray-300 w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    checked={filteredOrders?.length > 0 && selectedOrders.length === filteredOrders?.length}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedOrders(filteredOrders.map((o: any) => o.id));
+                      } else {
+                        setSelectedOrders([]);
+                      }
+                    }}
+                  />
+                </th>
                 <th className="p-4 w-10"></th>
                 <th className="p-4 font-semibold text-gray-600">#</th>
                 <th className="p-4 font-semibold text-gray-600">Order ID</th>
@@ -91,6 +145,20 @@ export default function AdminOrders() {
               {filteredOrders?.map((o: any, index: number) => (
                 <React.Fragment key={o.id}>
                   <tr className={`border-b hover:bg-gray-50 cursor-pointer ${expandedOrderId === o.id ? 'bg-blue-50' : ''}`} onClick={() => toggleExpand(o.id)}>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      <input 
+                        type="checkbox"
+                        className="rounded border-gray-300 w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        checked={selectedOrders.includes(o.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedOrders([...selectedOrders, o.id]);
+                          } else {
+                            setSelectedOrders(selectedOrders.filter(id => id !== o.id));
+                          }
+                        }}
+                      />
+                    </td>
                     <td className="p-4 text-gray-400">
                       {expandedOrderId === o.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                     </td>
@@ -126,7 +194,7 @@ export default function AdminOrders() {
                   
                   {expandedOrderId === o.id && (
                     <tr className="bg-gray-50 border-b">
-                      <td colSpan={9} className="p-6">
+                      <td colSpan={10} className="p-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                           <div>
                             <h4 className="font-semibold text-gray-700 mb-2">Customer Details</h4>
@@ -161,7 +229,7 @@ export default function AdminOrders() {
               ))}
               {filteredOrders?.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="p-8 text-center text-gray-500">No orders found matching your search.</td>
+                  <td colSpan={10} className="p-8 text-center text-gray-500">No orders found matching your search.</td>
                 </tr>
               )}
             </tbody>
