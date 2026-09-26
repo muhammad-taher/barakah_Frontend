@@ -1,7 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Search, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, ChevronDown, ChevronUp, RefreshCw, Truck } from 'lucide-react';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+
+const steadfastStatusColors: Record<string, string> = {
+  'in_review': 'bg-yellow-100 text-yellow-800',
+  'pending': 'bg-yellow-100 text-yellow-800',
+  'delivered': 'bg-green-100 text-green-800',
+  'partial_delivered': 'bg-green-100 text-green-800',
+  'cancelled': 'bg-red-100 text-red-800',
+  'hold': 'bg-orange-100 text-orange-800',
+  'unknown': 'bg-gray-100 text-gray-800',
+};
+
+function getSteadfastBadgeClass(status: string | null): string {
+  if (!status) return 'bg-gray-100 text-gray-500';
+  return steadfastStatusColors[status] || 'bg-gray-100 text-gray-800';
+}
 
 export default function AdminOrders() {
   const token = localStorage.getItem('admin_token');
@@ -10,11 +27,12 @@ export default function AdminOrders() {
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [bulkStatus, setBulkStatus] = useState('Processing');
+  const [refreshingIds, setRefreshingIds] = useState<number[]>([]);
   
   const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ['admin_orders'],
     queryFn: async () => {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders`, {
+      const res = await axios.get(`${API_URL}/api/v1/admin/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       return res.data;
@@ -23,7 +41,7 @@ export default function AdminOrders() {
 
   const updateStatus = useMutation({
     mutationFn: async ({ id, status }: { id: number, status: string }) => {
-      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders/${id}/status`, { status }, {
+      return axios.put(`${API_URL}/api/v1/admin/orders/${id}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
     },
@@ -35,7 +53,7 @@ export default function AdminOrders() {
 
   const updateBulkStatus = useMutation({
     mutationFn: async ({ order_ids, status }: { order_ids: number[], status: string }) => {
-      return axios.put(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/admin/orders/bulk-status`, { order_ids, status }, {
+      return axios.put(`${API_URL}/api/v1/admin/orders/bulk-status`, { order_ids, status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
     },
@@ -45,6 +63,34 @@ export default function AdminOrders() {
       setSelectedOrders([]);
     }
   });
+
+  const refreshSteadfastStatus = async (orderId: number) => {
+    setRefreshingIds(prev => [...prev, orderId]);
+    try {
+      await axios.get(`${API_URL}/api/v1/admin/orders/${orderId}/steadfast-status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to refresh SteadFast status:', err);
+    } finally {
+      setRefreshingIds(prev => prev.filter(id => id !== orderId));
+    }
+  };
+
+  const refreshBulkSteadfastStatus = async () => {
+    setRefreshingIds(prev => [...prev, ...selectedOrders]);
+    try {
+      await axios.post(`${API_URL}/api/v1/admin/orders/bulk-steadfast-status`, { order_ids: selectedOrders }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to bulk refresh SteadFast status:', err);
+    } finally {
+      setRefreshingIds([]);
+    }
+  };
 
   if (isLoading) return <div className="p-8 text-center">Loading orders...</div>;
   if (isError) {
@@ -70,12 +116,18 @@ export default function AdminOrders() {
     setExpandedOrderId(expandedOrderId === id ? null : id);
   };
 
+  // Check if any selected orders have steadfast consignments
+  const selectedHaveSteadfast = selectedOrders.some(id => {
+    const order = orders?.find((o: any) => o.id === id);
+    return order?.steadfast_consignment_id;
+  });
+
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className="text-3xl font-bold text-gray-800">Order Management</h2>
         
-        <div className="flex items-center gap-4 w-full md:w-auto">
+        <div className="flex items-center gap-4 w-full md:w-auto flex-wrap">
           {selectedOrders.length > 0 && (
             <div className="flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
               <span className="text-sm text-blue-700 font-medium px-2">{selectedOrders.length} selected</span>
@@ -96,6 +148,16 @@ export default function AdminOrders() {
               >
                 Apply
               </button>
+              {selectedHaveSteadfast && (
+                <button 
+                  onClick={refreshBulkSteadfastStatus}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors flex items-center gap-1"
+                  disabled={refreshingIds.length > 0}
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.length > 0 ? 'animate-spin' : ''}`} />
+                  Refresh SF
+                </button>
+              )}
             </div>
           )}
           <div className="relative flex-1 md:flex-none">
@@ -113,7 +175,7 @@ export default function AdminOrders() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[800px]">
+          <table className="w-full text-left min-w-[900px]">
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="p-4 w-12">
@@ -138,6 +200,12 @@ export default function AdminOrders() {
                 <th className="p-4 font-semibold text-gray-600">Date</th>
                 <th className="p-4 font-semibold text-gray-600">Total</th>
                 <th className="p-4 font-semibold text-gray-600">Status</th>
+                <th className="p-4 font-semibold text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Truck className="w-4 h-4" />
+                    SteadFast
+                  </div>
+                </th>
                 <th className="p-4 font-semibold text-gray-600">Actions</th>
               </tr>
             </thead>
@@ -154,7 +222,7 @@ export default function AdminOrders() {
                           if (e.target.checked) {
                             setSelectedOrders([...selectedOrders, o.id]);
                           } else {
-                            setSelectedOrders(selectedOrders.filter(id => id !== o.id));
+                            setSelectedOrders(selectedOrders.filter((id: number) => id !== o.id));
                           }
                         }}
                       />
@@ -179,6 +247,25 @@ export default function AdminOrders() {
                       </span>
                     </td>
                     <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      {o.steadfast_consignment_id ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSteadfastBadgeClass(o.steadfast_status)}`}>
+                            {o.steadfast_status || 'N/A'}
+                          </span>
+                          <button
+                            onClick={() => refreshSteadfastStatus(o.id)}
+                            className="text-gray-400 hover:text-blue-600 transition-colors"
+                            title="Refresh SteadFast status"
+                            disabled={refreshingIds.includes(o.id)}
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.includes(o.id) ? 'animate-spin text-blue-600' : ''}`} />
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
+                    </td>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
                       <select 
                         value={o.status}
                         onChange={(e) => updateStatus.mutate({ id: o.id, status: e.target.value })}
@@ -194,8 +281,8 @@ export default function AdminOrders() {
                   
                   {expandedOrderId === o.id && (
                     <tr className="bg-gray-50 border-b">
-                      <td colSpan={10} className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <td colSpan={11} className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                           <div>
                             <h4 className="font-semibold text-gray-700 mb-2">Customer Details</h4>
                             <p className="text-sm text-gray-600 mb-1"><span className="font-medium text-gray-700">Name:</span> {o.customer_name}</p>
@@ -221,6 +308,31 @@ export default function AdminOrders() {
                               <p className="text-sm text-gray-500">No items data available.</p>
                             )}
                           </div>
+                          {o.steadfast_consignment_id && (
+                            <div>
+                              <h4 className="font-semibold text-gray-700 mb-2">SteadFast Courier</h4>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Consignment ID:</span> {o.steadfast_consignment_id}
+                              </p>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Tracking Code:</span> {o.steadfast_tracking_code}
+                              </p>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Delivery Status:</span>{' '}
+                                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSteadfastBadgeClass(o.steadfast_status)}`}>
+                                  {o.steadfast_status || 'N/A'}
+                                </span>
+                              </p>
+                              <button
+                                onClick={() => refreshSteadfastStatus(o.id)}
+                                className="mt-2 text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+                                disabled={refreshingIds.includes(o.id)}
+                              >
+                                <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.includes(o.id) ? 'animate-spin' : ''}`} />
+                                Refresh Status
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -229,7 +341,7 @@ export default function AdminOrders() {
               ))}
               {filteredOrders?.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="p-8 text-center text-gray-500">No orders found matching your search.</td>
+                  <td colSpan={11} className="p-8 text-center text-gray-500">No orders found matching your search.</td>
                 </tr>
               )}
             </tbody>
