@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['"Hind Siliguri"', 'sans-serif'],
+        serif: ['"Playfair Display"', 'serif'],
       }
     },
   },

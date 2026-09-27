@@ -9,8 +9,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link to="/" className="mb-4 block hover:opacity-80 transition-opacity">
-              <img src="/logo.png" alt="Barakah" className="h-16 object-contain brightness-0 invert" />
+            <Link to="/" className="mb-6 hover:opacity-80 transition-opacity flex items-center gap-2 w-fit">
+              <img src="/logobarakah.png" alt="Barakah" className="h-14 object-contain brightness-0 invert" />
+              <span className="text-3xl font-bold tracking-tight text-white font-serif">Barakah</span>
             </Link>
             <p className="text-[15px] leading-relaxed mb-5 max-w-xs text-zinc-400">
               সারাদেশে প্রিমিয়াম কোয়ালিটির প্রোডাক্ট আপনার দোরগোড়ায়। আপনার বিশ্বস্ত অনলাইন শপিং গন্তব্য।
