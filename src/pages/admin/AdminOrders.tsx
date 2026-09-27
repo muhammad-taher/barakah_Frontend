@@ -323,12 +323,13 @@ export default function AdminOrders() {
                       <select 
                         value={o.status}
                         onChange={(e) => updateStatus.mutate({ id: o.id, status: e.target.value })}
-                        className="text-sm border rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        disabled={o.status === 'Completed' || o.status === 'Cancelled'}
+                        className={`text-sm border rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${(o.status === 'Completed' || o.status === 'Cancelled') ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        <option value="Pending">Pending</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Completed">Completed</option>
-                        <option value="Cancelled">Cancelled</option>
+                        <option value="Pending" disabled={o.status === 'Processing' || o.status === 'Completed' || o.status === 'Cancelled'}>Pending</option>
+                        <option value="Processing" disabled={o.status === 'Completed' || o.status === 'Cancelled'}>Processing</option>
+                        <option value="Completed" disabled={o.status === 'Cancelled'}>Completed</option>
+                        <option value="Cancelled" disabled={o.status === 'Completed'}>Cancelled</option>
                       </select>
                     </td>
                   </tr>
