@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="mb-6 hover:opacity-80 transition-opacity flex items-center gap-2 w-fit">
-              <img src="/logobarakah.png" alt="Barakah" className="h-14 object-contain brightness-0 invert" />
+              <img src="/logobarakah.png" alt="Barakah" className="h-14 object-contain" />
               <span className="text-3xl font-bold tracking-tight text-white font-serif">Barakah</span>
             </Link>
             <p className="text-[15px] leading-relaxed mb-5 max-w-xs text-zinc-400">
