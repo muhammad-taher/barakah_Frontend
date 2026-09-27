@@ -9,12 +9,12 @@ export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   if (!token) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/secure-hq/login" replace />;
   }
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
-    navigate('/admin/login');
+    navigate('/secure-hq/login');
   };
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -53,19 +53,19 @@ export default function AdminLayout() {
           <h1 className="text-2xl font-bold text-zinc-800 tracking-tight">Barakah Admin</h1>
         </div>
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-          <Link to="/admin/dashboard" onClick={closeMobileMenu} className={linkCls('/admin/dashboard')}>
+          <Link to="/secure-hq/dashboard" onClick={closeMobileMenu} className={linkCls('/secure-hq/dashboard')}>
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </Link>
-          <Link to="/admin/orders" onClick={closeMobileMenu} className={linkCls('/admin/orders')}>
+          <Link to="/secure-hq/orders" onClick={closeMobileMenu} className={linkCls('/secure-hq/orders')}>
             <ShoppingCart size={20} />
             <span>Orders</span>
           </Link>
-          <Link to="/admin/products" onClick={closeMobileMenu} className={linkCls('/admin/products')}>
+          <Link to="/secure-hq/products" onClick={closeMobileMenu} className={linkCls('/secure-hq/products')}>
             <Package size={20} />
             <span>Products</span>
           </Link>
-          <Link to="/admin/settings" onClick={closeMobileMenu} className={linkCls('/admin/settings')}>
+          <Link to="/secure-hq/settings" onClick={closeMobileMenu} className={linkCls('/secure-hq/settings')}>
             <Settings size={20} />
             <span>Settings</span>
           </Link>

@@ -43,7 +43,7 @@ export default function AdminDashboard() {
         </div>
         <div 
           className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => navigate('/admin/orders')}
+          onClick={() => navigate('/secure-hq/orders')}
         >
           <div className="bg-green-100 p-4 rounded-lg mr-4">
             <ShoppingCart className="text-green-600" size={24} />
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
         </div>
         <div 
           className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => navigate('/admin/orders?status=Pending')}
+          onClick={() => navigate('/secure-hq/orders?status=Pending')}
         >
           <div className="bg-yellow-100 p-4 rounded-lg mr-4">
             <Clock className="text-yellow-600" size={24} />
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
         </div>
         <div 
           className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => navigate('/admin/orders?status=Processing')}
+          onClick={() => navigate('/secure-hq/orders?status=Processing')}
         >
           <div className="bg-indigo-100 p-4 rounded-lg mr-4">
             <RefreshCw className="text-indigo-600" size={24} />
