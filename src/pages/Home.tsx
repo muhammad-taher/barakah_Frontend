@@ -29,8 +29,8 @@ export default function Home() {
 
   // Resolve settings with fallbacks, but prevent flashing default images while loading
   const heroImage = isSettingsLoading ? undefined : (settings?.hero_image_url || DEFAULT_HERO_IMAGE);
-  const promoTitle = settings?.promo_title || 'Weekend Special.\nUp to 30% Off.';
-  const promoSubtitle = settings?.promo_subtitle || 'Upgrade your wardrobe with our latest arrivals. Limited time offer exclusively online.';
+  const promoTitle = settings?.promo_title || 'সাপ্তাহিক অফার\n৩০% পর্যন্ত ছাড়';
+  const promoSubtitle = settings?.promo_subtitle || 'আমাদের নতুন কালেকশন থেকে বেছে নিন আপনার পছন্দের ড্রেস। শুধুমাত্র অনলাইনে সীমিত সময়ের অফার।';
   const promoLink = settings?.promo_link || '/shop?sale=true';
   const promoImage = isSettingsLoading ? undefined : (settings?.promo_image_url || DEFAULT_PROMO_IMAGE);
 
@@ -58,31 +58,32 @@ export default function Home() {
               loading="eager"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50" />
+          <div className="absolute inset-0 bg-black/50 sm:bg-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70" />
         </div>
-        <div className="relative z-10 text-center text-white px-4 max-w-3xl mx-auto flex flex-col items-center">
-          <span className="uppercase tracking-[0.25em] text-[11px] font-semibold mb-5 block text-white/80">
-            New Season Collection
+        <div className="relative z-10 text-center text-white px-6 py-10 max-w-4xl mx-auto flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl">
+          <span className="uppercase tracking-[0.25em] text-xs font-semibold mb-5 block text-white/90">
+            নতুন সিজন কালেকশন
           </span>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 tracking-tight leading-[1.1]">
-            Designed for everyday confidence.
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight leading-[1.2]">
+            আপনার প্রতিদিনের কনফিডেন্সের জন্য
           </h1>
-          <p className="text-base md:text-lg text-white/80 mb-10 max-w-lg leading-relaxed">
-            Discover our premium selection of contemporary essentials. Crafted with uncompromising quality.
+          <p className="text-base md:text-lg text-white/90 mb-10 max-w-xl leading-relaxed">
+            আমাদের সেরা মানের প্রিমিয়াম কালেকশন দেখুন। প্রতিটি প্রোডাক্টে গুণগত মানের নিশ্চয়তা।
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Link
               to="/shop"
-              className="bg-white text-black px-8 py-3.5 font-semibold hover:bg-zinc-100 transition-all duration-200 inline-flex items-center justify-center gap-2 text-sm"
+              className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-zinc-100 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
             >
-              Explore Collection
+              কালেকশন দেখুন
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/shop"
-              className="border border-white/40 text-white px-8 py-3.5 font-semibold hover:bg-white/10 transition-all duration-200 inline-flex items-center justify-center gap-2 text-sm"
+              className="border border-white/40 text-white px-8 py-3.5 rounded-full font-bold hover:bg-white/20 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] hover:scale-105"
             >
-              View All Products
+              সব প্রোডাক্ট দেখুন
             </Link>
           </div>
         </div>
@@ -104,8 +105,8 @@ export default function Home() {
                 <Truck className="w-5 h-5 text-zinc-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-zinc-900">Nationwide Delivery</h4>
-                <p className="text-xs text-zinc-500 hidden sm:block">All across Bangladesh</p>
+                <h4 className="font-semibold text-[15px] text-zinc-900">সারাদেশে ডেলিভারি</h4>
+                <p className="text-sm text-zinc-500 hidden sm:block">বাংলাদেশের যেকোনো প্রান্তে</p>
               </div>
             </div>
             <div className="flex items-center gap-3 justify-center md:justify-start">
@@ -113,8 +114,8 @@ export default function Home() {
                 <CreditCard className="w-5 h-5 text-zinc-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-zinc-900">Cash on Delivery</h4>
-                <p className="text-xs text-zinc-500 hidden sm:block">Pay when you receive</p>
+                <h4 className="font-semibold text-[15px] text-zinc-900">ক্যাশ অন ডেলিভারি</h4>
+                <p className="text-sm text-zinc-500 hidden sm:block">প্রোডাক্ট হাতে পেয়ে পেমেন্ট</p>
               </div>
             </div>
             <div className="flex items-center gap-3 justify-center md:justify-start">
@@ -122,8 +123,8 @@ export default function Home() {
                 <ShieldCheck className="w-5 h-5 text-zinc-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-zinc-900">Quality Guarantee</h4>
-                <p className="text-xs text-zinc-500 hidden sm:block">Premium materials</p>
+                <h4 className="font-semibold text-[15px] text-zinc-900">গুণগত মানের নিশ্চয়তা</h4>
+                <p className="text-sm text-zinc-500 hidden sm:block">প্রিমিয়াম ম্যাটেরিয়াল</p>
               </div>
             </div>
             <div className="flex items-center gap-3 justify-center md:justify-start">
@@ -131,8 +132,8 @@ export default function Home() {
                 <RefreshCcw className="w-5 h-5 text-zinc-600" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-zinc-900">Easy Exchanges</h4>
-                <p className="text-xs text-zinc-500 hidden sm:block">7-day return policy</p>
+                <h4 className="font-semibold text-[15px] text-zinc-900">সহজ রিটার্ন পলিসি</h4>
+                <p className="text-sm text-zinc-500 hidden sm:block">৭ দিনের রিটার্ন সুবিধা</p>
               </div>
             </div>
           </div>
@@ -143,11 +144,11 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 w-full py-16 md:py-20">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2 block">Curated For You</span>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Trending Now</h2>
+            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2 block">আপনার জন্য স্পেশাল</span>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight">ট্রেন্ডিং প্রোডাক্ট</h2>
           </div>
-          <Link to="/shop" className="text-sm font-semibold hover:underline hidden sm:inline-flex items-center gap-1 text-zinc-600 hover:text-black transition-colors">
-            View All
+          <Link to="/shop" className="text-[15px] font-semibold hover:underline hidden sm:inline-flex items-center gap-1 text-zinc-600 hover:text-black transition-colors">
+            সব দেখুন
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -157,8 +158,8 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-10 text-center sm:hidden">
-          <Link to="/shop" className="text-sm font-semibold inline-flex items-center gap-1.5 text-zinc-600 hover:text-black transition-colors">
-            View All Products
+          <Link to="/shop" className="text-[15px] font-semibold inline-flex items-center gap-1.5 text-zinc-600 hover:text-black transition-colors">
+            সব প্রোডাক্ট দেখুন
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -221,10 +222,10 @@ export default function Home() {
                 <span key={i}>{line}{i < promoTitle.split('\n').length - 1 && <br/>}</span>
               ))}
             </h3>
-            <p className="text-zinc-400 mb-8 max-w-md text-sm md:text-base leading-relaxed">{promoSubtitle}</p>
+            <p className="text-zinc-400 mb-8 max-w-md text-[15px] leading-relaxed">{promoSubtitle}</p>
             <div>
-              <Link to={promoLink} className="bg-white text-black px-7 py-3 font-semibold hover:bg-zinc-100 transition-colors inline-flex items-center gap-2 text-sm">
-                Shop The Sale
+              <Link to={promoLink} className="bg-white text-black px-7 py-3 rounded-full font-bold hover:bg-zinc-100 transition-colors inline-flex items-center gap-2 text-[15px]">
+                অফারগুলো দেখুন
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

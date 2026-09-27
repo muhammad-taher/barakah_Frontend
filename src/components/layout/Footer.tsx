@@ -9,70 +9,70 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-14">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <Link to="/" className="text-2xl font-bold tracking-tight text-white mb-4 block">
-              BARAKAH
+            <Link to="/" className="mb-4 block hover:opacity-80 transition-opacity">
+              <img src="/logo.jpeg" alt="Barakah" className="h-10 object-contain brightness-0 invert" />
             </Link>
-            <p className="text-sm leading-relaxed mb-5 max-w-xs">
-              Premium quality products delivered to your doorstep across Bangladesh. Your trusted online shopping destination.
+            <p className="text-[15px] leading-relaxed mb-5 max-w-xs text-zinc-400">
+              সারাদেশে প্রিমিয়াম কোয়ালিটির প্রোডাক্ট আপনার দোরগোড়ায়। আপনার বিশ্বস্ত অনলাইন শপিং গন্তব্য।
             </p>
-            <div className="space-y-2.5 text-sm">
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-zinc-500" />
-                <span>+880 1XXX-XXXXXX</span>
+            <div className="space-y-3 text-[15px]">
+              <div className="flex items-center gap-3">
+                <Phone className="w-[18px] h-[18px] text-zinc-500" />
+                <span className="font-medium text-zinc-300">+8801353366144</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-zinc-500" />
-                <span>support@barakah.com</span>
+              <div className="flex items-center gap-3">
+                <Mail className="w-[18px] h-[18px] text-zinc-500" />
+                <span className="text-zinc-300">support@barakah.com</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-zinc-500" />
-                <span>Dhaka, Bangladesh</span>
+              <div className="flex items-center gap-3">
+                <MapPin className="w-[18px] h-[18px] text-zinc-500" />
+                <span className="text-zinc-300">ঢাকা, বাংলাদেশ</span>
               </div>
             </div>
           </div>
 
           {/* Shop */}
           <div>
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-5">Shop</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="/shop" className="hover:text-white transition-colors">All Products</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">New Arrivals</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">Best Sellers</Link></li>
-              <li><Link to="/shop" className="hover:text-white transition-colors">Sale</Link></li>
+            <h4 className="font-semibold text-white text-[15px] mb-5">শপ</h4>
+            <ul className="space-y-3 text-[15px]">
+              <li><Link to="/shop" className="hover:text-white transition-colors">সব প্রোডাক্ট</Link></li>
+              <li><Link to="/shop" className="hover:text-white transition-colors">নতুন কালেকশন</Link></li>
+              <li><Link to="/shop" className="hover:text-white transition-colors">বেস্ট সেলার</Link></li>
+              <li><Link to="/shop" className="hover:text-white transition-colors">অফার</Link></li>
             </ul>
           </div>
 
           {/* Support */}
           <div>
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-5">Support</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="#" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">FAQs</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">Shipping & Returns</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">Track Order</Link></li>
+            <h4 className="font-semibold text-white text-[15px] mb-5">সাপোর্ট</h4>
+            <ul className="space-y-3 text-[15px]">
+              <li><Link to="#" className="hover:text-white transition-colors">যোগাযোগ করুন</Link></li>
+              <li><Link to="#" className="hover:text-white transition-colors">সাধারণ প্রশ্ন</Link></li>
+              <li><Link to="#" className="hover:text-white transition-colors">ডেলিভারি ও রিটার্ন</Link></li>
+              <li><Link to="#" className="hover:text-white transition-colors">অর্ডার ট্র্যাক করুন</Link></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-white text-sm uppercase tracking-wider mb-5">Legal</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link to="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">Refund Policy</Link></li>
+            <h4 className="font-semibold text-white text-[15px] mb-5">নীতিমালা</h4>
+            <ul className="space-y-3 text-[15px]">
+              <li><Link to="#" className="hover:text-white transition-colors">প্রাইভেসি পলিসি</Link></li>
+              <li><Link to="#" className="hover:text-white transition-colors">টার্মস অফ সার্ভিস</Link></li>
+              <li><Link to="#" className="hover:text-white transition-colors">রিফান্ড পলিসি</Link></li>
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-zinc-500">© {new Date().getFullYear()} Barakah. All rights reserved.</p>
-          <div className="flex items-center gap-6 text-xs text-zinc-500">
-            <span className="flex items-center gap-1.5">
-              💵 Cash on Delivery
+          <p className="text-sm text-zinc-500">© {new Date().getFullYear()} বারাকাহ। সর্বস্বত্ব সংরক্ষিত।</p>
+          <div className="flex items-center gap-6 text-sm text-zinc-400">
+            <span className="flex items-center gap-2">
+              💵 ক্যাশ অন ডেলিভারি
             </span>
-            <span className="flex items-center gap-1.5">
-              🚚 Nationwide Delivery
+            <span className="flex items-center gap-2">
+              🚚 সারাদেশে ডেলিভারি
             </span>
           </div>
         </div>

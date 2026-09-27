@@ -102,15 +102,15 @@ export default function Header() {
             
             {/* Logo */}
             <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
-              <Link to="/" className="text-2xl font-bold tracking-tight text-black hover:opacity-80 transition-opacity">
-                BARAKAH
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <img src="/logo.jpeg" alt="Barakah" className="h-8 md:h-10 object-contain" />
               </Link>
             </div>
 
             {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-8 text-sm font-medium text-zinc-500">
-              <Link to="/" className="hover:text-black transition-colors relative py-1">Home</Link>
-              <Link to="/shop" className="hover:text-black transition-colors relative py-1">Shop</Link>
+            <nav className="hidden lg:flex items-center gap-8 text-[15px] font-medium text-zinc-600">
+              <Link to="/" className="hover:text-black transition-colors relative py-1">হোম</Link>
+              <Link to="/shop" className="hover:text-black transition-colors relative py-1">শপ</Link>
             </nav>
 
             {/* Right actions */}
@@ -148,16 +148,16 @@ export default function Header() {
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 rounded-lg transition-colors"
+                className="block py-3 px-3 text-base font-medium text-zinc-700 hover:bg-zinc-50 rounded-lg transition-colors"
               >
-                Home
+                হোম
               </Link>
               <Link
                 to="/shop"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-3 px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 rounded-lg transition-colors"
+                className="block py-3 px-3 text-base font-medium text-zinc-700 hover:bg-zinc-50 rounded-lg transition-colors"
               >
-                Shop
+                শপ
               </Link>
             </nav>
           </div>
@@ -176,8 +176,8 @@ export default function Header() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for products..."
-                className="w-full py-5 pl-14 pr-14 text-base border-b border-zinc-100 focus:outline-none placeholder:text-zinc-400"
+                placeholder="প্রোডাক্ট খুঁজুন..."
+                className="w-full py-5 pl-14 pr-14 text-[15px] border-b border-zinc-100 focus:outline-none placeholder:text-zinc-400"
               />
               <button
                 type="button"
@@ -193,7 +193,7 @@ export default function Header() {
               {searchQuery.trim() && searchResults && searchResults.length > 0 && (
                 <div className="p-3">
                   <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider px-3 py-2">
-                    Products
+                    প্রোডাক্টসমূহ
                   </p>
                   {searchResults.map((product: any) => (
                     <button
@@ -201,7 +201,7 @@ export default function Header() {
                       onClick={() => handleProductClick(product.slug)}
                       className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-zinc-50 transition-colors text-left"
                     >
-                      <div className="w-14 h-14 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0">
+                      <div className="w-14 h-14 rounded-lg bg-zinc-100 overflow-hidden flex-shrink-0 border border-zinc-200">
                         <img
                           src={product.image_url || 'https://via.placeholder.com/56?text=...'}
                           alt={product.name}
@@ -209,8 +209,8 @@ export default function Header() {
                         />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-zinc-900 truncate">{product.name}</p>
-                        <p className="text-sm text-zinc-500 font-semibold">৳{product.price?.toLocaleString()}</p>
+                        <p className="text-[15px] font-medium text-zinc-900 truncate">{product.name}</p>
+                        <p className="text-[15px] text-zinc-600 font-semibold">৳{product.price?.toLocaleString()}</p>
                       </div>
                     </button>
                   ))}
@@ -218,20 +218,20 @@ export default function Header() {
                     onClick={handleSearchSubmit as any}
                     className="w-full text-center text-sm font-medium text-zinc-500 hover:text-black py-3 border-t border-zinc-100 mt-2 transition-colors"
                   >
-                    View all results for "{searchQuery}"
+                    "{searchQuery}" এর জন্য সব রেজাল্ট দেখুন
                   </button>
                 </div>
               )}
 
               {searchQuery.trim() && searchResults && searchResults.length === 0 && (
                 <div className="p-10 text-center">
-                  <p className="text-zinc-400 text-sm">No products found for "{searchQuery}"</p>
+                  <p className="text-zinc-500 text-[15px]">"{searchQuery}" এর জন্য কোনো প্রোডাক্ট পাওয়া যায়নি</p>
                 </div>
               )}
 
               {!searchQuery.trim() && (
                 <div className="p-10 text-center">
-                  <p className="text-zinc-400 text-sm">Start typing to search products</p>
+                  <p className="text-zinc-500 text-[15px]">সার্চ করতে টাইপ করুন...</p>
                 </div>
               )}
             </div>
