@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { ShoppingCart, Package, DollarSign, Clock, RefreshCw } from 'lucide-react';
 
 export default function AdminDashboard() {
   const token = localStorage.getItem('admin_token');
+  const navigate = useNavigate();
   
   const { data: stats, isLoading, isError, error } = useQuery({
     queryKey: ['admin_dashboard'],
@@ -39,7 +41,10 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold text-gray-900">৳ {stats?.total_revenue}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate('/admin/orders')}
+        >
           <div className="bg-green-100 p-4 rounded-lg mr-4">
             <ShoppingCart className="text-green-600" size={24} />
           </div>
@@ -57,7 +62,10 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold text-gray-900">{stats?.total_products}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate('/admin/orders?status=Pending')}
+        >
           <div className="bg-yellow-100 p-4 rounded-lg mr-4">
             <Clock className="text-yellow-600" size={24} />
           </div>
@@ -66,7 +74,10 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold text-gray-900">{stats?.pending_orders}</p>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
+        <div 
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate('/admin/orders?status=Processing')}
+        >
           <div className="bg-indigo-100 p-4 rounded-lg mr-4">
             <RefreshCw className="text-indigo-600" size={24} />
           </div>

@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Search, ChevronDown, ChevronUp, RefreshCw, Truck } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
@@ -23,11 +24,23 @@ function getSteadfastBadgeClass(status: string | null): string {
 export default function AdminOrders() {
   const token = localStorage.getItem('admin_token');
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
   const [bulkStatus, setBulkStatus] = useState('Processing');
   const [refreshingIds, setRefreshingIds] = useState<number[]>([]);
+  
+  const statusFilter = searchParams.get('status') || 'All';
+  const setStatusFilter = (status: string) => {
+    setSelectedOrders([]);
+    if (status === 'All') {
+      searchParams.delete('status');
+    } else {
+      searchParams.set('status', status);
+    }
+    setSearchParams(searchParams);
+  };
   
   const { data: orders, isLoading, isError, error } = useQuery({
     queryKey: ['admin_orders'],
@@ -92,6 +105,18 @@ export default function AdminOrders() {
     }
   };
 
+  const resetSteadfast = async (orderId: number) => {
+    if (!window.confirm('Clear SteadFast data for this order? You can re-create a consignment by setting it to Processing again.')) return;
+    try {
+      await axios.delete(`${API_URL}/api/v1/admin/orders/${orderId}/steadfast-reset`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to reset SteadFast:', err);
+    }
+  };
+
   if (isLoading) return <div className="p-8 text-center">Loading orders...</div>;
   if (isError) {
     const isAuthError = (error as any)?.response?.status === 401;
@@ -104,6 +129,9 @@ export default function AdminOrders() {
   }
 
   const filteredOrders = orders?.filter((o: any) => {
+    // Status filter
+    if (statusFilter !== 'All' && o.status !== statusFilter) return false;
+    // Search filter
     const q = searchQuery.toLowerCase();
     return (
       o.customer_name?.toLowerCase().includes(q) ||
@@ -171,6 +199,32 @@ export default function AdminOrders() {
             />
           </div>
         </div>
+      </div>
+
+      {/* Status Filter Tabs */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {['All', 'Pending', 'Processing', 'Completed', 'Cancelled'].map((status) => {
+          const count = status === 'All' 
+            ? orders?.length || 0 
+            : orders?.filter((o: any) => o.status === status).length || 0;
+          const isActive = statusFilter === status;
+          return (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
+                ${isActive 
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                }`}
+            >
+              {status}
+              <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -330,6 +384,12 @@ export default function AdminOrders() {
                               >
                                 <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.includes(o.id) ? 'animate-spin' : ''}`} />
                                 Refresh Status
+                              </button>
+                              <button
+                                onClick={() => resetSteadfast(o.id)}
+                                className="mt-1 text-sm text-red-500 hover:text-red-700 transition-colors"
+                              >
+                                ✕ Reset SteadFast
                               </button>
                             </div>
                           )}
