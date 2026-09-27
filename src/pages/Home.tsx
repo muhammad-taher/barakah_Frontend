@@ -58,10 +58,8 @@ export default function Home() {
               loading="eager"
             />
           )}
-          <div className="absolute inset-0 bg-black/50 sm:bg-black/40" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/70" />
         </div>
-        <div className="relative z-10 text-center text-white px-6 py-10 max-w-4xl mx-auto flex flex-col items-center bg-black/20 backdrop-blur-sm rounded-3xl border border-white/10 shadow-2xl">
+        <div className="relative z-10 text-center text-white px-8 py-12 max-w-4xl mx-auto flex flex-col items-center bg-black/40 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl">
           <span className="uppercase tracking-[0.25em] text-xs font-semibold mb-5 block text-white/90">
             নতুন সিজন কালেকশন
           </span>

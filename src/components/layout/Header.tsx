@@ -103,7 +103,7 @@ export default function Header() {
             {/* Logo */}
             <div className="flex-1 lg:flex-none flex justify-center lg:justify-start">
               <Link to="/" className="hover:opacity-80 transition-opacity">
-                <img src="/logo.jpeg" alt="Barakah" className="h-8 md:h-10 object-contain" />
+                <img src="/logo.png" alt="Barakah" className="h-14 md:h-16 object-contain" />
               </Link>
             </div>
 

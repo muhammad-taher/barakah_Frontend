@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link to="/" className="mb-4 block hover:opacity-80 transition-opacity">
-              <img src="/logo.jpeg" alt="Barakah" className="h-10 object-contain brightness-0 invert" />
+              <img src="/logo.png" alt="Barakah" className="h-16 object-contain brightness-0 invert" />
             </Link>
             <p className="text-[15px] leading-relaxed mb-5 max-w-xs text-zinc-400">
               সারাদেশে প্রিমিয়াম কোয়ালিটির প্রোডাক্ট আপনার দোরগোড়ায়। আপনার বিশ্বস্ত অনলাইন শপিং গন্তব্য।
