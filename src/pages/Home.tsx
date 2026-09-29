@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div className="flex flex-col pb-0">
       {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[600px] max-h-[900px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[90vh] min-h-[600px] max-h-[900px] flex items-end justify-center pb-[15vh] overflow-hidden">
         <div className="absolute inset-0 z-0 bg-zinc-900">
           {heroImage && (
             <img 
