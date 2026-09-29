@@ -159,7 +159,7 @@ export default function Home() {
                   </p>
                 )}
                 <Link
-                  to={pkg.link || '/shop'}
+                  to={pkg.product_slug ? `/product/${pkg.product_slug}` : '/shop'}
                   className="inline-flex items-center gap-2 bg-zinc-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-zinc-800 transition-colors w-fit text-sm"
                 >
                   অর্ডার করতে ক্লিক করুন

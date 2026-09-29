@@ -11,12 +11,20 @@ export default function AdminPackages() {
     headline: '',
     description: '',
     image_url: '',
-    link: '/shop',
+    product_id: '',
     active: true,
     order_index: 0
   });
 
   const [isUploading, setIsUploading] = useState(false);
+
+  const { data: products = [] } = useQuery({
+    queryKey: ['admin_products'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/products/`);
+      return res.data;
+    }
+  });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -76,7 +84,7 @@ export default function AdminPackages() {
       headline: '',
       description: '',
       image_url: '',
-      link: '/shop',
+      product_id: '',
       active: true,
       order_index: 0
     });
@@ -88,7 +96,7 @@ export default function AdminPackages() {
       headline: pkg.headline,
       description: pkg.description,
       image_url: pkg.image_url,
-      link: pkg.link || '/shop',
+      product_id: pkg.product_id || '',
       active: pkg.active,
       order_index: pkg.order_index
     });
@@ -193,13 +201,18 @@ export default function AdminPackages() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Link URL (e.g., /product/slug)</label>
-                <input
-                  type="text"
-                  value={formData.link}
-                  onChange={e => setFormData({...formData, link: e.target.value})}
+                <label className="block text-sm font-medium text-gray-700 mb-1">Select Product</label>
+                <select
+                  required
+                  value={formData.product_id}
+                  onChange={e => setFormData({...formData, product_id: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none"
-                />
+                >
+                  <option value="">-- Select a product --</option>
+                  {products.map((p: any) => (
+                    <option key={p.id} value={p.id}>{p.name}</option>
+                  ))}
+                </select>
               </div>
 
               <div>
