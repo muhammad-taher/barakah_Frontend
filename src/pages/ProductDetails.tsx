@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Star, Truck, Shield, Check } from 'lucide-react';
-import { addToCart } from '../utils/cart';
+import { addToCart, clearCart } from '../utils/cart';
 import ReactMarkdown from 'react-markdown';
 
 export default function ProductDetails() {
@@ -37,6 +37,7 @@ export default function ProductDetails() {
   };
 
   const handleBuyNow = () => {
+    clearCart();
     addToCart({
       id: String(product.id),
       name: product.name,
