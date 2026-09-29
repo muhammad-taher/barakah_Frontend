@@ -12,6 +12,7 @@ import AdminLayout from './components/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminProducts from './pages/admin/AdminProducts';
+import AdminPackages from './pages/admin/AdminPackages';
 import AdminSettings from './pages/admin/AdminSettings';
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
             <Route path="products" element={<AdminProducts />} />
+            <Route path="packages" element={<AdminPackages />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
 

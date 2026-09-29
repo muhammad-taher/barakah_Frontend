@@ -65,6 +65,10 @@ export default function AdminLayout() {
             <Package size={20} />
             <span>Products</span>
           </Link>
+          <Link to="/secure-hq/packages" onClick={closeMobileMenu} className={linkCls('/secure-hq/packages')}>
+            <Package size={20} />
+            <span>Packages</span>
+          </Link>
           <Link to="/secure-hq/settings" onClick={closeMobileMenu} className={linkCls('/secure-hq/settings')}>
             <Settings size={20} />
             <span>Settings</span>

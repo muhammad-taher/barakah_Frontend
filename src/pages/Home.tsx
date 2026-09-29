@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck, Truck, RefreshCcw, Sparkles, CreditCard } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck, RefreshCcw, CreditCard } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ProductCard from '../components/shop/ProductCard';
@@ -25,25 +25,22 @@ export default function Home() {
     }
   });
 
+  const { data: packages = [] } = useQuery({
+    queryKey: ['packages'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/packages/`);
+      return res.data;
+    }
+  });
+
   const featuredProducts = products ? products.slice(0, 8) : [];
 
   // Resolve settings with fallbacks, but prevent flashing default images while loading
   const heroImage = isSettingsLoading ? undefined : (settings?.hero_image_url || DEFAULT_HERO_IMAGE);
   const promoTitle = settings?.promo_title || 'সাপ্তাহিক অফার\n৩০% পর্যন্ত ছাড়';
-  const promoSubtitle = settings?.promo_subtitle || 'আমাদের নতুন কালেকশন থেকে বেছে নিন আপনার পছন্দের ড্রেস। শুধুমাত্র অনলাইনে সীমিত সময়ের অফার।';
+  const promoSubtitle = settings?.promo_subtitle || 'আমাদের নতুন কালেকশন থেকে বেছে নিন আপনার পছন্দের ড্রেস। শুধুমাত্র অনলাইনে সীমিত সময়ের অফার।';
   const promoLink = settings?.promo_link || '/shop?sale=true';
   const promoImage = isSettingsLoading ? undefined : (settings?.promo_image_url || DEFAULT_PROMO_IMAGE);
-
-  // Custom offer settings
-  const offerEnabled = settings?.offer_enabled !== 'false';
-  const offerTitle = settings?.offer_title;
-  const offerSubtitle = settings?.offer_subtitle;
-  const offerBadge = settings?.offer_badge;
-  const offerImage = settings?.offer_image_url;
-  const offerLink = settings?.offer_link || '/shop';
-  const offerButtonText = settings?.offer_button_text || 'Shop Now';
-
-  const showOfferBanner = offerEnabled && (offerTitle || offerImage);
 
   return (
     <div className="flex flex-col pb-0">
@@ -59,31 +56,14 @@ export default function Home() {
             />
           )}
         </div>
-        <div className="relative z-10 text-center text-white px-8 py-12 max-w-4xl mx-auto flex flex-col items-center bg-black/40 backdrop-blur-md rounded-3xl border border-white/20 shadow-2xl">
-          <span className="uppercase tracking-[0.25em] text-xs font-semibold mb-5 block text-white/90">
-            নতুন সিজন কালেকশন
-          </span>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 tracking-tight leading-[1.2]">
-            আপনার প্রতিদিনের কনফিডেন্সের জন্য
-          </h1>
-          <p className="text-base md:text-lg text-white/90 mb-10 max-w-xl leading-relaxed">
-            আমাদের সেরা মানের প্রিমিয়াম কালেকশন দেখুন। প্রতিটি প্রোডাক্টে গুণগত মানের নিশ্চয়তা।
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/shop"
-              className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-zinc-100 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              কালেকশন দেখুন
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              to="/shop"
-              className="border border-white/40 text-white px-8 py-3.5 rounded-full font-bold hover:bg-white/20 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] hover:scale-105"
-            >
-              সব প্রোডাক্ট দেখুন
-            </Link>
-          </div>
+        <div className="relative z-10 flex justify-center w-full">
+          <Link
+            to="/shop"
+            className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-zinc-100 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
+          >
+            অর্ডার করতে ক্লিক করুন
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Scroll indicator */}
@@ -163,44 +143,36 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Custom Offer Banner — Admin configurable, shown below Trending Now */}
-      {showOfferBanner && (
-        <section className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">
+      {/* Packages Section */}
+      {packages?.map((pkg: any) => (
+        <section key={pkg.id} className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">
           <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 border border-amber-100/60">
             <div className="flex flex-col md:flex-row items-stretch">
               {/* Text Content */}
               <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
-                {offerBadge && (
-                  <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-100 px-3 py-1.5 rounded-full w-fit mb-4">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    {offerBadge}
-                  </span>
-                )}
-                {offerTitle && (
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
-                    {offerTitle}
-                  </h3>
-                )}
-                {offerSubtitle && (
-                  <p className="text-zinc-600 mb-6 max-w-lg text-sm md:text-base leading-relaxed">
-                    {offerSubtitle}
+                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
+                  {pkg.headline}
+                </h3>
+                {pkg.description && (
+                  <p className="text-zinc-600 mb-6 max-w-lg text-sm md:text-base leading-relaxed whitespace-pre-line">
+                    {pkg.description}
                   </p>
                 )}
                 <Link
-                  to={offerLink}
+                  to="/shop"
                   className="inline-flex items-center gap-2 bg-zinc-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-zinc-800 transition-colors w-fit text-sm"
                 >
-                  {offerButtonText}
+                  অর্ডার করতে ক্লিক করুন
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
 
-              {/* Offer Image */}
-              {offerImage && (
+              {/* Package Image */}
+              {pkg.image_url && (
                 <div className="flex-1 min-h-[250px] md:min-h-[350px] relative">
                   <img
-                    src={offerImage}
-                    alt={offerTitle || 'Special Offer'}
+                    src={pkg.image_url}
+                    alt={pkg.headline}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
@@ -209,7 +181,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-      )}
+      ))}
 
       {/* Promo Banner */}
       <section className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">
