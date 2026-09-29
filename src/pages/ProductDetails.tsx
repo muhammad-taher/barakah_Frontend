@@ -43,7 +43,7 @@ export default function ProductDetails() {
   };
 
   if (isLoading || !product) {
-    return <div className="max-w-7xl mx-auto px-4 py-20 text-center">Loading product...</div>;
+    return <div className="max-w-7xl mx-auto px-4 py-20 text-center">প্রোডাক্ট লোড হচ্ছে...</div>;
   }
 
   const displayImage = product.image_url || (product.images && product.images[0]) || 'https://via.placeholder.com/400x500?text=No+Image';
@@ -72,7 +72,7 @@ export default function ProductDetails() {
               <div className="flex items-center gap-1 text-zinc-800">
                 <Star className="w-4 h-4 fill-current" />
                 <span className="font-medium text-sm">{product.rating}</span>
-                <span className="text-zinc-500 text-sm">({product.reviews} reviews)</span>
+                <span className="text-zinc-500 text-sm">({product.reviews} রিভিউ)</span>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -81,7 +81,7 @@ export default function ProductDetails() {
                 <span className="text-lg text-zinc-400 line-through">৳{product.oldPrice.toLocaleString()}</span>
               )}
               {product.discount && (
-                <span className="bg-red-100 text-red-700 px-2 py-1 text-xs font-bold rounded">Save {product.discount}%</span>
+                <span className="bg-red-100 text-red-700 px-2 py-1 text-xs font-bold rounded">ছাড় {product.discount}%</span>
               )}
             </div>
           </div>
@@ -89,17 +89,6 @@ export default function ProductDetails() {
           <p className="text-zinc-600 mb-8 leading-relaxed">
             {product.description}
           </p>
-
-          <div className="mb-8">
-            <h4 className="font-medium mb-3">Size</h4>
-            <div className="flex gap-3">
-              {['S', 'M', 'L', 'XL'].map(size => (
-                <button key={size} className="w-10 h-10 border border-zinc-200 rounded-md flex items-center justify-center text-sm hover:border-black hover:bg-zinc-50 transition-colors">
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
 
           <div className="flex gap-4 mb-4">
             <div className="flex items-center border border-zinc-200 rounded-md w-32">
@@ -115,7 +104,7 @@ export default function ProductDetails() {
                   : 'bg-black text-white hover:bg-zinc-800'
               }`}
             >
-              {added ? <><Check className="w-4 h-4 mr-2" /> Added!</> : 'Add to Cart'}
+              {added ? <><Check className="w-4 h-4 mr-2" /> যোগ করা হয়েছে!</> : 'কার্টে যোগ করুন'}
             </button>
           </div>
 
@@ -123,22 +112,22 @@ export default function ProductDetails() {
             onClick={handleBuyNow}
             className="w-full border-2 border-black text-black font-semibold py-3 rounded-md hover:bg-black hover:text-white transition-colors mb-8"
           >
-            Buy Now
+            এখুনি কিনুন
           </button>
 
           <div className="space-y-4 border-t border-zinc-100 pt-8 mt-4">
             <div className="flex items-start gap-3">
               <Truck className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
               <div>
-                <h5 className="font-medium text-sm">Fast Delivery</h5>
-                <p className="text-sm text-zinc-500">Inside Dhaka 1-2 days, Outside 3-5 days</p>
+                <h5 className="font-medium text-sm">দ্রুত ডেলিভারি</h5>
+                <p className="text-sm text-zinc-500">ঢাকায় ১-২ দিন, ঢাকার বাইরে ৩-৫ দিন</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Shield className="w-5 h-5 text-zinc-400 shrink-0 mt-0.5" />
               <div>
-                <h5 className="font-medium text-sm">Secure Payment</h5>
-                <p className="text-sm text-zinc-500">Cash on Delivery available</p>
+                <h5 className="font-medium text-sm">নিরাপদ পেমেন্ট</h5>
+                <p className="text-sm text-zinc-500">ক্যাশ অন ডেলিভারি সুবিধা</p>
               </div>
             </div>
           </div>

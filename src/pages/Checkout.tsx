@@ -44,7 +44,7 @@ export default function Checkout() {
       clearCart();
       navigate('/order-success', { state: { orderNumber: res.data.order_number, totalAmount: res.data.total_amount } });
     } catch (err: any) {
-      const msg = err?.response?.data?.error || 'Checkout failed. Please try again.';
+      const msg = err?.response?.data?.error || 'অর্ডার করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
       alert(msg);
     } finally {
       setIsSubmitting(false);
@@ -55,10 +55,10 @@ export default function Checkout() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <ShoppingBag className="w-16 h-16 text-zinc-300 mx-auto mb-6" />
-        <h1 className="text-2xl font-bold mb-3">Your cart is empty</h1>
-        <p className="text-zinc-500 mb-8">Add some products to your cart before checkout.</p>
+        <h1 className="text-2xl font-bold mb-3">আপনার কার্ট খালি</h1>
+        <p className="text-zinc-500 mb-8">চেকআউট করার আগে কার্টে কিছু প্রোডাক্ট যোগ করুন।</p>
         <Link to="/shop" className="bg-black text-white font-semibold px-8 py-3 rounded-md hover:bg-zinc-800 transition-colors inline-block">
-          Continue Shopping
+          শপিং চালিয়ে যান
         </Link>
       </div>
     );
@@ -66,21 +66,21 @@ export default function Checkout() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
-      <h1 className="text-2xl font-bold tracking-tight mb-8">Checkout</h1>
+      <h1 className="text-2xl font-bold tracking-tight mb-8">চেকআউট</h1>
       
       <form onSubmit={handlePlaceOrder} className="flex flex-col md:flex-row gap-10">
         <div className="flex-1">
           <div className="space-y-8">
             {/* Contact */}
             <div>
-              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">Contact Information</h2>
+              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">যোগাযোগের তথ্য</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Phone Number *</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">মোবাইল নম্বর *</label>
                   <input required type="tel" placeholder="01XXX-XXXXXX" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Email Address (Optional)</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">ইমেইল এড্রেস (ঐচ্ছিক)</label>
                   <input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                 </div>
               </div>
@@ -88,15 +88,15 @@ export default function Checkout() {
 
             {/* Delivery */}
             <div>
-              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">Delivery Address</h2>
+              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">ডেলিভারি ঠিকানা</h2>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Full Name *</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">পুরো নাম *</label>
                   <input required type="text" value={name} onChange={e => setName(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 mb-1">Division *</label>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">বিভাগ *</label>
                     <select required value={division} onChange={e => setDivision(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none bg-white">
                       <option>Dhaka</option>
                       <option>Chattogram</option>
@@ -109,31 +109,31 @@ export default function Checkout() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 mb-1">City/District *</label>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">শহর/জেলা *</label>
                     <input required type="text" value={district} onChange={e => setDistrict(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Area/Thana *</label>
-                  <input required type="text" placeholder="e.g. Gulshan, Banani, Mirpur" value={area} onChange={e => setArea(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">এলাকা/থানা *</label>
+                  <input required type="text" placeholder="যেমন: Gulshan, Banani, Mirpur" value={area} onChange={e => setArea(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Full Address *</label>
-                  <textarea required rows={3} placeholder="House, Road, Block, etc." value={address} onChange={e => setAddress(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none"></textarea>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">সম্পূর্ণ ঠিকানা *</label>
+                  <textarea required rows={3} placeholder="House, Road, Block, ইত্যাদি" value={address} onChange={e => setAddress(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none"></textarea>
                 </div>
               </div>
             </div>
 
             {/* Payment Method */}
             <div>
-              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">Payment Method</h2>
+              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-100 pb-2">পেমেন্ট মেথড</h2>
               <div className="border border-zinc-200 rounded-md overflow-hidden">
                 <label className="flex items-center p-4 bg-zinc-50 border-b border-zinc-200 cursor-pointer">
                   <input type="radio" name="payment" defaultChecked className="w-4 h-4 text-black focus:ring-black border-zinc-300" />
-                  <span className="ml-3 font-medium">Cash on Delivery (COD)</span>
+                  <span className="ml-3 font-medium">ক্যাশ অন ডেলিভারি (COD)</span>
                 </label>
                 <div className="p-4 bg-white text-sm text-zinc-600">
-                  Pay with cash upon delivery.
+                  প্রোডাক্ট হাতে পেয়ে পেমেন্ট করুন।
                 </div>
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function Checkout() {
               disabled={isSubmitting}
               className="w-full bg-black text-white font-bold text-lg py-4 rounded-md hover:bg-zinc-800 transition-colors shadow-lg shadow-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Placing Order...' : `Place Order — ৳${total.toLocaleString()}`}
+              {isSubmitting ? 'অর্ডার প্রসেস হচ্ছে...' : `অর্ডার কনফার্ম করুন — ৳${total.toLocaleString()}`}
             </button>
           </div>
         </div>
@@ -151,7 +151,7 @@ export default function Checkout() {
         {/* Order Summary */}
         <div className="w-full md:w-80">
           <div className="bg-zinc-50 p-6 rounded-xl border border-zinc-100 sticky top-24">
-            <h2 className="font-bold mb-4">Order Summary</h2>
+            <h2 className="font-bold mb-4">অর্ডার সামারি</h2>
             <div className="space-y-3 mb-6">
               {cartItems.map((item) => (
                 <div key={item.id} className="flex items-center gap-3">
@@ -169,15 +169,15 @@ export default function Checkout() {
             
             <div className="border-t border-zinc-200 pt-4 space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-zinc-500">Subtotal</span>
+                <span className="text-zinc-500">সাবটোটাল</span>
                 <span>৳{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Shipping</span>
+                <span className="text-zinc-500">ডেলিভারি চার্জ</span>
                 <span>৳{shipping}</span>
               </div>
               <div className="border-t border-zinc-200 pt-2 flex justify-between font-bold text-lg mt-2">
-                <span>Total</span>
+                <span>সর্বমোট</span>
                 <span>৳{total.toLocaleString()}</span>
               </div>
             </div>

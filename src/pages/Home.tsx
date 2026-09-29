@@ -4,6 +4,7 @@ import { ArrowRight, ShieldCheck, Truck, RefreshCcw, CreditCard } from 'lucide-r
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ProductCard from '../components/shop/ProductCard';
+import ReactMarkdown from 'react-markdown';
 
 const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80';
 const DEFAULT_PROMO_IMAGE = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80';
@@ -154,9 +155,9 @@ export default function Home() {
                   {pkg.headline}
                 </h3>
                 {pkg.description && (
-                  <p className="text-zinc-600 mb-6 max-w-lg text-sm md:text-base leading-relaxed whitespace-pre-line">
-                    {pkg.description}
-                  </p>
+                  <div className="text-zinc-600 mb-6 max-w-lg text-sm md:text-base leading-relaxed prose prose-sm prose-zinc">
+                    <ReactMarkdown>{pkg.description}</ReactMarkdown>
+                  </div>
                 )}
                 <Link
                   to={pkg.product_slug ? `/product/${pkg.product_slug}` : '/shop'}
