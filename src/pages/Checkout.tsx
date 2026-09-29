@@ -18,6 +18,7 @@ export default function Checkout() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setCartItems(getCart());
   }, []);
 

@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -7,6 +7,10 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 import ProductCard from '../components/shop/ProductCard';
 
 export default function Shop() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
   const [searchQuery, setSearchQuery] = useState(initialSearch);

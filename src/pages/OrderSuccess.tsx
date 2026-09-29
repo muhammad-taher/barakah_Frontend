@@ -1,7 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
 
 export default function OrderSuccess() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const location = useLocation();
   const state = location.state as { orderNumber?: string; totalAmount?: number } | null;
 

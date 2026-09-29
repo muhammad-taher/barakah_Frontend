@@ -11,6 +11,7 @@ export default function Cart() {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     loadCart();
     window.addEventListener('cart-updated', loadCart);
     return () => window.removeEventListener('cart-updated', loadCart);

@@ -1,5 +1,6 @@
 
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { ArrowRight, ShieldCheck, Truck, RefreshCcw, CreditCard } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -10,6 +11,9 @@ const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1490481651871-ab68
 const DEFAULT_PROMO_IMAGE = 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&q=80';
 
 export default function Home() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { data: products } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
