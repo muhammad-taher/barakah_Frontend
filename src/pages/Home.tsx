@@ -57,13 +57,13 @@ export default function Home() {
           )}
         </div>
         <div className="relative z-10 flex justify-center w-full">
-          <Link
-            to="/shop"
-            className="bg-white text-black px-8 py-3.5 rounded-full font-bold hover:bg-zinc-100 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
+          <a
+            href="#order-section"
+            className="bg-black text-white px-8 py-3.5 rounded-full font-bold hover:bg-zinc-800 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
           >
             অর্ডার করতে ক্লিক করুন
             <ArrowRight className="w-4 h-4" />
-          </Link>
+          </a>
         </div>
 
         {/* Scroll indicator */}
@@ -119,7 +119,7 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="max-w-7xl mx-auto px-4 w-full py-16 md:py-20">
+      <section id="order-section" className="max-w-7xl mx-auto px-4 w-full py-16 md:py-20">
         <div className="flex justify-between items-end mb-10">
           <div>
             <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-2 block">আপনার জন্য স্পেশাল</span>
@@ -158,13 +158,13 @@ export default function Home() {
                     {pkg.description}
                   </p>
                 )}
-                <Link
-                  to="/shop"
+                <a
+                  href="#order-section"
                   className="inline-flex items-center gap-2 bg-zinc-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-zinc-800 transition-colors w-fit text-sm"
                 >
                   অর্ডার করতে ক্লিক করুন
                   <ArrowRight className="w-4 h-4" />
-                </Link>
+                </a>
               </div>
 
               {/* Package Image */}
