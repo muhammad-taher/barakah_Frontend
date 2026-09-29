@@ -22,7 +22,7 @@ export default function Checkout() {
   }, []);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = cartItems.length > 0 ? 60 : 0;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
@@ -174,7 +174,7 @@ export default function Checkout() {
               </div>
               <div className="flex justify-between">
                 <span className="text-zinc-500">ডেলিভারি চার্জ</span>
-                <span>৳{shipping}</span>
+                <span className="text-green-600 font-bold">ফ্রি</span>
               </div>
               <div className="border-t border-zinc-200 pt-2 flex justify-between font-bold text-lg mt-2">
                 <span>সর্বমোট</span>

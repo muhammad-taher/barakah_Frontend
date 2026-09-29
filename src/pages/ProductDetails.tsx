@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Star, Truck, Shield, Check } from 'lucide-react';
 import { addToCart } from '../utils/cart';
+import ReactMarkdown from 'react-markdown';
 
 export default function ProductDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ['product', slug],
@@ -86,9 +91,13 @@ export default function ProductDetails() {
             </div>
           </div>
 
-          <p className="text-zinc-600 mb-8 leading-relaxed">
-            {product.description}
-          </p>
+          <div className="text-zinc-600 mb-8 leading-relaxed prose prose-sm md:prose-base prose-zinc max-w-none">
+            {product.detailed_description ? (
+              <ReactMarkdown>{product.detailed_description}</ReactMarkdown>
+            ) : (
+              <p>{product.description}</p>
+            )}
+          </div>
 
           <div className="flex gap-4 mb-4">
             <div className="flex items-center border border-zinc-200 rounded-md w-32">

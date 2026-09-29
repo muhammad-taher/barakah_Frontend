@@ -34,6 +34,14 @@ export default function Home() {
     }
   });
 
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['reviews'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/reviews/`);
+      return res.data;
+    }
+  });
+
   const featuredProducts = products ? products.slice(0, 8) : [];
 
   // Resolve settings with fallbacks, but prevent flashing default images while loading
@@ -148,7 +156,7 @@ export default function Home() {
       {packages?.map((pkg: any) => (
         <section key={pkg.id} className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">
           <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50 border border-amber-100/60">
-            <div className="flex flex-col md:flex-row items-stretch">
+            <div className="flex flex-col-reverse md:flex-row items-stretch">
               {/* Text Content */}
               <div className="flex-1 p-8 md:p-12 lg:p-16 flex flex-col justify-center">
                 <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
@@ -183,6 +191,23 @@ export default function Home() {
           </div>
         </section>
       ))}
+
+      {/* Customer Reviews Section */}
+      {reviews && reviews.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold tracking-tight mb-2">কাস্টমার রিভিউ</h2>
+            <p className="text-zinc-500">আমাদের সম্মানিত গ্রাহকদের মতামত</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {reviews.map((r: any) => (
+              <div key={r.id} className="rounded-lg overflow-hidden border border-zinc-200 shadow-sm aspect-[3/4] relative group">
+                <img src={r.image_url} alt="Customer Review" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Promo Banner */}
       <section className="max-w-7xl mx-auto px-4 w-full pb-16 md:pb-20">

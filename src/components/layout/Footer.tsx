@@ -27,7 +27,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <MapPin className="w-[18px] h-[18px] text-zinc-500" />
-                <span className="text-zinc-300">ঢাকা, বাংলাদেশ</span>
+                <span className="text-zinc-300">ভালুকা, বাংলাদেশ</span>
               </div>
             </div>
           </div>

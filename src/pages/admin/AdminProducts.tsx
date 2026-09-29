@@ -12,6 +12,7 @@ export default function AdminProducts() {
     slug: '',
     sku: '',
     description: '',
+    detailed_description: '',
     price: 0,
     stock: 0,
     category_id: 1,
@@ -88,6 +89,7 @@ export default function AdminProducts() {
         slug: product.slug || '',
         sku: product.sku || '',
         description: product.description || '',
+        detailed_description: product.detailed_description || '',
         price: product.price || 0,
         stock: product.stock || 0,
         category_id: product.category_id || 1,
@@ -95,7 +97,7 @@ export default function AdminProducts() {
       });
     } else {
       setEditingId(null);
-      setFormData({ name: '', slug: '', sku: '', description: '', price: 0, stock: 0, category_id: 1, image_url: '' });
+      setFormData({ name: '', slug: '', sku: '', description: '', detailed_description: '', price: 0, stock: 0, category_id: 1, image_url: '' });
     }
     setIsModalOpen(true);
   };
@@ -103,7 +105,7 @@ export default function AdminProducts() {
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingId(null);
-    setFormData({ name: '', slug: '', sku: '', description: '', price: 0, stock: 0, category_id: 1, image_url: '' });
+    setFormData({ name: '', slug: '', sku: '', description: '', detailed_description: '', price: 0, stock: 0, category_id: 1, image_url: '' });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -136,18 +138,31 @@ export default function AdminProducts() {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="text-2xl font-bold mb-4">{editingId ? 'Edit Product' : 'Add New Product'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="mt-1 w-full p-2 border rounded-md" />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Name</label>
+                  <input required type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="mt-1 w-full p-2 border rounded-md" />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Slug</label>
+                  <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="mt-1 w-full p-2 border rounded-md" />
+                </div>
               </div>
+              
               <div>
-                <label className="block text-sm font-medium text-gray-700">Slug</label>
-                <input required type="text" value={formData.slug} onChange={e => setFormData({...formData, slug: e.target.value})} className="mt-1 w-full p-2 border rounded-md" />
+                <label className="block text-sm font-medium text-gray-700">Short Description</label>
+                <textarea rows={2} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="mt-1 w-full p-2 border rounded-md" />
               </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Detailed Description (Markdown supported)</label>
+                <textarea rows={6} value={formData.detailed_description} onChange={e => setFormData({...formData, detailed_description: e.target.value})} className="mt-1 w-full p-2 border rounded-md font-mono text-sm" placeholder="Write detailed description here... **Bold** *Italic* etc." />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-gray-700">Product Image</label>
                 <div className="mt-1 flex flex-col gap-2">
