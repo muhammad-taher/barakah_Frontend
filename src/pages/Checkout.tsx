@@ -10,7 +10,6 @@ export default function Checkout() {
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
   const [division, setDivision] = useState('Dhaka');
   const [district, setDistrict] = useState('Dhaka City');
   const [area, setArea] = useState('');
@@ -79,10 +78,6 @@ export default function Checkout() {
                 <div>
                   <label className="block text-sm font-medium text-zinc-700 mb-1">মোবাইল নম্বর *</label>
                   <input required type="tel" placeholder="01XXX-XXXXXX" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">ইমেইল এড্রেস (ঐচ্ছিক)</label>
-                  <input type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-zinc-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-black focus:outline-none" />
                 </div>
               </div>
             </div>
