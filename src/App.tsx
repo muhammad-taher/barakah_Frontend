@@ -44,7 +44,7 @@ function App() {
             <Route path="order-success" element={<OrderSuccess />} />
             <Route path="*" element={
               <div className="py-20 text-center">
-                <h1 className="text-2xl font-bold">404 - Page Not Found</h1>
+                <h1 className="text-2xl font-bold">404 - পেজটি পাওয়া যায়নি</h1>
               </div>
             } />
           </Route>

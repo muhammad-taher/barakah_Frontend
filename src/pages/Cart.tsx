@@ -28,17 +28,17 @@ export default function Cart() {
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const shipping = cartItems.length > 0 ? 60 : 0;
+  const shipping = 0;
   const total = subtotal + shipping;
 
   if (cartItems.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-20 text-center">
         <ShoppingBag className="w-16 h-16 text-zinc-300 mx-auto mb-6" />
-        <h1 className="text-2xl font-bold mb-3">Your cart is empty</h1>
-        <p className="text-zinc-500 mb-8">Looks like you haven't added anything to your cart yet.</p>
+        <h1 className="text-2xl font-bold mb-3">আপনার কার্ট খালি</h1>
+        <p className="text-zinc-500 mb-8">মনে হচ্ছে আপনি এখনও কার্টে কিছু যোগ করেননি।</p>
         <Link to="/shop" className="bg-black text-white font-semibold px-8 py-3 rounded-md hover:bg-zinc-800 transition-colors inline-block">
-          Continue Shopping
+          শপিং চালিয়ে যান
         </Link>
       </div>
     );
@@ -46,15 +46,15 @@ export default function Cart() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-      <h1 className="text-3xl font-bold tracking-tight mb-8">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold tracking-tight mb-8">শপিং কার্ট</h1>
       
       <div className="flex flex-col lg:flex-row gap-12">
         <div className="flex-1">
           <div className="border-b border-zinc-200 pb-4 mb-4 hidden sm:grid grid-cols-12 text-sm font-medium text-zinc-500">
-            <div className="col-span-6">Product</div>
-            <div className="col-span-2 text-center">Price</div>
-            <div className="col-span-2 text-center">Quantity</div>
-            <div className="col-span-2 text-right">Total</div>
+            <div className="col-span-6">প্রোডাক্ট</div>
+            <div className="col-span-2 text-center">দাম</div>
+            <div className="col-span-2 text-center">পরিমাণ</div>
+            <div className="col-span-2 text-right">মোট</div>
           </div>
           
           <div className="space-y-6">
@@ -74,13 +74,13 @@ export default function Cart() {
                       onClick={() => handleRemove(item.id)}
                       className="text-sm text-red-600 hover:underline mt-2 flex items-center gap-1 sm:hidden"
                     >
-                      <Trash2 className="w-4 h-4" /> Remove
+                      <Trash2 className="w-4 h-4" /> মুছুন
                     </button>
                   </div>
                 </div>
                 
                 <div className="col-span-1 sm:col-span-2 text-left sm:text-center font-medium sm:font-normal">
-                  <span className="sm:hidden text-zinc-500 mr-2">Price:</span>
+                  <span className="sm:hidden text-zinc-500 mr-2">দাম:</span>
                   ৳{item.price.toLocaleString()}
                 </div>
                 
@@ -103,7 +103,7 @@ export default function Cart() {
                 </div>
                 
                 <div className="col-span-1 sm:col-span-2 flex justify-between sm:justify-end items-center font-medium">
-                  <span className="sm:hidden text-zinc-500 mr-2">Total:</span>
+                  <span className="sm:hidden text-zinc-500 mr-2">মোট:</span>
                   ৳{(item.price * item.quantity).toLocaleString()}
                   <button 
                     onClick={() => handleRemove(item.id)}
@@ -119,26 +119,26 @@ export default function Cart() {
         
         <div className="w-full lg:w-[380px]">
           <div className="bg-zinc-50 p-6 rounded-xl border border-zinc-100">
-            <h2 className="text-lg font-bold mb-6">Order Summary</h2>
+            <h2 className="text-lg font-bold mb-6">অর্ডার সামারি</h2>
             <div className="space-y-4 text-sm mb-6">
               <div className="flex justify-between">
-                <span className="text-zinc-600">Subtotal</span>
+                <span className="text-zinc-600">সাবটোটাল</span>
                 <span className="font-medium">৳{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-600">Shipping</span>
-                <span className="font-medium">৳{shipping}</span>
+                <span className="text-zinc-600">ডেলিভারি চার্জ</span>
+                <span className="font-bold text-green-600">ফ্রি</span>
               </div>
               <div className="border-t border-zinc-200 pt-4 flex justify-between items-center mt-2">
-                <span className="font-bold text-base">Total</span>
+                <span className="font-bold text-base">সর্বমোট</span>
                 <span className="font-bold text-xl">৳{total.toLocaleString()}</span>
               </div>
             </div>
             <Link to="/checkout" className="w-full bg-black text-white font-semibold py-4 rounded-md flex items-center justify-center hover:bg-zinc-800 transition-colors mb-4">
-              Proceed to Checkout
+              চেকআউট করুন
             </Link>
             <Link to="/shop" className="w-full border border-zinc-200 text-zinc-700 font-medium py-3 rounded-md flex items-center justify-center hover:bg-zinc-50 transition-colors">
-              Continue Shopping
+              শপিং চালিয়ে যান
             </Link>
           </div>
         </div>

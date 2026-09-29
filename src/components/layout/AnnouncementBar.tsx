@@ -20,7 +20,7 @@ export default function AnnouncementBar() {
     <div className="bg-zinc-900 text-white text-xs py-2.5 text-center font-medium tracking-wide relative">
       <div className="max-w-7xl mx-auto px-8">
         <span className="inline-flex items-center gap-2">
-          🚚 সারাদেশে হোম ডেলিভারি &nbsp;|&nbsp; 💵 ক্যাশ অন ডেলিভারি &nbsp;|&nbsp; ✨ Premium Quality Products
+          🚚 সারাদেশে হোম ডেলিভারি &nbsp;|&nbsp; 💵 ক্যাশ অন ডেলিভারি &nbsp;|&nbsp; ✨ প্রিমিয়াম কোয়ালিটি প্রোডাক্ট
         </span>
       </div>
       <button

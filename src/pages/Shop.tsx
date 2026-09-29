@@ -97,11 +97,11 @@ export default function Shop() {
       {/* Page header */}
       <div className="mb-8 md:mb-10">
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
-          {searchQuery ? `Results for "${searchQuery}"` : 'All Products'}
+          {searchQuery ? `"${searchQuery}" এর জন্য ফলাফল` : 'সব প্রোডাক্ট'}
         </h1>
         <p className="text-zinc-500 text-sm">
-          {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
-          {searchQuery && ' found'}
+          {filteredProducts.length} টি প্রোডাক্ট
+          {searchQuery && ' পাওয়া গেছে'}
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export default function Shop() {
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="Search products..."
+            placeholder="প্রোডাক্ট খুঁজুন..."
             className="w-full pl-10 pr-10 py-2.5 border border-zinc-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-zinc-900 transition-all bg-white placeholder:text-zinc-400"
           />
           {searchQuery && (
@@ -136,11 +136,11 @@ export default function Shop() {
             className="border border-zinc-200 px-4 py-2.5 rounded-lg text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 cursor-pointer appearance-none pr-8 transition-all"
             style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em' }}
           >
-            <option value="featured">Featured</option>
-            <option value="newest">Newest</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="name">Name: A to Z</option>
+            <option value="featured">ফিচার্ড</option>
+            <option value="newest">নতুন</option>
+            <option value="price-low">দাম: কম থেকে বেশি</option>
+            <option value="price-high">দাম: বেশি থেকে কম</option>
+            <option value="name">নাম: A to Z</option>
           </select>
         </div>
       </div>
@@ -157,16 +157,16 @@ export default function Shop() {
           <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Search className="w-6 h-6 text-zinc-400" />
           </div>
-          <h3 className="text-lg font-semibold text-zinc-900 mb-1">No products found</h3>
+          <h3 className="text-lg font-semibold text-zinc-900 mb-1">কোন প্রোডাক্ট পাওয়া যায়নি</h3>
           <p className="text-sm text-zinc-500 mb-4">
-            {searchQuery ? `We couldn't find anything matching "${searchQuery}"` : 'No products available right now.'}
+            {searchQuery ? `"${searchQuery}" এর সাথে মিলে এমন কিছু পাওয়া যায়নি` : 'এই মুহূর্তে কোন প্রোডাক্ট নেই।'}
           </p>
           {searchQuery && (
             <button
               onClick={clearSearch}
               className="text-sm font-medium text-black underline hover:no-underline"
             >
-              Clear search
+              সার্চ ক্লিয়ার করুন
             </button>
           )}
         </div>
