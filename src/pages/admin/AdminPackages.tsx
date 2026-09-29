@@ -11,6 +11,7 @@ export default function AdminPackages() {
     headline: '',
     description: '',
     image_url: '',
+    link: '/shop',
     active: true,
     order_index: 0
   });
@@ -75,6 +76,7 @@ export default function AdminPackages() {
       headline: '',
       description: '',
       image_url: '',
+      link: '/shop',
       active: true,
       order_index: 0
     });
@@ -86,6 +88,7 @@ export default function AdminPackages() {
       headline: pkg.headline,
       description: pkg.description,
       image_url: pkg.image_url,
+      link: pkg.link || '/shop',
       active: pkg.active,
       order_index: pkg.order_index
     });
@@ -186,6 +189,16 @@ export default function AdminPackages() {
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none h-24"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Link URL (e.g., /product/slug)</label>
+                <input
+                  type="text"
+                  value={formData.link}
+                  onChange={e => setFormData({...formData, link: e.target.value})}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none"
                 />
               </div>
 
