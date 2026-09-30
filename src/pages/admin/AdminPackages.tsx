@@ -11,7 +11,6 @@ export default function AdminPackages() {
     headline: '',
     description: '',
     image_url: '',
-    price: 0,
     product_id: '',
     active: true,
     order_index: 0
@@ -85,7 +84,6 @@ export default function AdminPackages() {
       headline: '',
       description: '',
       image_url: '',
-      price: 0,
       product_id: '',
       active: true,
       order_index: 0
@@ -98,7 +96,6 @@ export default function AdminPackages() {
       headline: pkg.headline,
       description: pkg.description,
       image_url: pkg.image_url,
-      price: pkg.price || 0,
       product_id: pkg.product_id || '',
       active: pkg.active,
       order_index: pkg.order_index
@@ -205,19 +202,7 @@ export default function AdminPackages() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Price (৳)</label>
-                <input
-                  required
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={formData.price}
-                  onChange={e => setFormData({...formData, price: parseFloat(e.target.value) || 0})}
-                  className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none"
-                  placeholder="e.g. 890"
-                />
-              </div>
+
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Select Product</label>
