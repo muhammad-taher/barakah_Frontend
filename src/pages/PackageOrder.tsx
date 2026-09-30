@@ -9,6 +9,17 @@ interface SelectedPackage {
   quantity: number;
 }
 
+const bdDivisionsDistricts: Record<string, string[]> = {
+  Dhaka: ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Kishoreganj', 'Madaripur', 'Manikganj', 'Munshiganj', 'Narayanganj', 'Narsingdi', 'Rajbari', 'Shariatpur', 'Tangail'],
+  Chattogram: ['Bandarban', 'Brahmanbaria', 'Chandpur', 'Chattogram', 'Comilla', 'Cox\'s Bazar', 'Feni', 'Khagrachhari', 'Lakshmipur', 'Noakhali', 'Rangamati'],
+  Rajshahi: ['Bogura', 'Chapainawabganj', 'Joypurhat', 'Naogaon', 'Natore', 'Pabna', 'Rajshahi', 'Sirajganj'],
+  Khulna: ['Bagerhat', 'Chuadanga', 'Jashore', 'Jhenaidah', 'Khulna', 'Kushtia', 'Magura', 'Meherpur', 'Narail', 'Satkhira'],
+  Barishal: ['Barguna', 'Barishal', 'Bhola', 'Jhalokati', 'Patuakhali', 'Pirojpur'],
+  Sylhet: ['Habiganj', 'Moulvibazar', 'Sunamganj', 'Sylhet'],
+  Rangpur: ['Dinajpur', 'Gaibandha', 'Kurigram', 'Lalmonirhat', 'Nilphamari', 'Panchagarh', 'Rangpur', 'Thakurgaon'],
+  Mymensingh: ['Jamalpur', 'Mymensingh', 'Netrokona', 'Sherpur']
+};
+
 export default function PackageOrder() {
   const navigate = useNavigate();
 
@@ -18,9 +29,18 @@ export default function PackageOrder() {
 
   // Billing form
   const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  const [division, setDivision] = useState('Dhaka');
+  const [district, setDistrict] = useState('Dhaka');
+  const [address, setAddress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Update district when division changes
+  useEffect(() => {
+    if (bdDivisionsDistricts[division]) {
+      setDistrict(bdDivisionsDistricts[division][0]);
+    }
+  }, [division]);
 
   // Packages
   const [selectedPackages, setSelectedPackages] = useState<SelectedPackage[]>([]);
@@ -82,10 +102,11 @@ export default function PackageOrder() {
     }
     setIsSubmitting(true);
     try {
+      const fullAddress = `${address}, ${district}, ${division}`;
       const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/orders/package-checkout`, {
         customer_name: name,
         phone,
-        address,
+        address: fullAddress,
         packages: selectedPackages.map(sp => ({ package_id: sp.packageId, quantity: sp.quantity }))
       });
       navigate('/order-success', { state: { orderNumber: res.data.order_number, totalAmount: res.data.total_amount } });
@@ -126,22 +147,51 @@ export default function PackageOrder() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-red-600 mb-1">আপনার ঠিকানা লিখুন *</label>
-                    <input
-                      required
-                      type="text"
-                      value={address}
-                      onChange={e => setAddress(e.target.value)}
-                      className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
-                    />
-                  </div>
-                  <div>
                     <label className="block text-sm font-medium text-red-600 mb-1">আপনার মোবাইল নং লিখুন *</label>
                     <input
                       required
                       type="tel"
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
+                      className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-red-600 mb-1">বিভাগ *</label>
+                      <select
+                        required
+                        value={division}
+                        onChange={e => setDivision(e.target.value)}
+                        className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none bg-white"
+                      >
+                        {Object.keys(bdDivisionsDistricts).map(div => (
+                          <option key={div} value={div}>{div}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-red-600 mb-1">শহর/জেলা *</label>
+                      <select
+                        required
+                        value={district}
+                        onChange={e => setDistrict(e.target.value)}
+                        className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none bg-white"
+                      >
+                        {bdDivisionsDistricts[division]?.map(dist => (
+                          <option key={dist} value={dist}>{dist}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-red-600 mb-1">আপনার ঠিকানা লিখুন *</label>
+                    <textarea
+                      required
+                      rows={2}
+                      placeholder="যেমন: House 12, Road 5, Block C"
+                      value={address}
+                      onChange={e => setAddress(e.target.value)}
                       className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
                     />
                   </div>
