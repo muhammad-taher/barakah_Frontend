@@ -107,18 +107,18 @@ export default function AdminPackages() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Manage Packages</h2>
         <button 
           onClick={() => { resetForm(); setIsModalOpen(true); }}
-          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors"
+          className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors whitespace-nowrap"
         >
           Add New Package
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-        <table className="w-full text-left">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+        <table className="w-full text-left min-w-[600px]">
           <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
             <tr>
               <th className="p-4">Image</th>
@@ -236,7 +236,7 @@ export default function AdminPackages() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Order Index (Lower appears first)</label>
                   <input
