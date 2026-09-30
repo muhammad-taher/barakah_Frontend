@@ -140,7 +140,7 @@ export default function PackageOrder() {
             {/* Left Column - Billing + Packages */}
             <div className="flex-1">
               {/* Billing Details */}
-              <div className="bg-white rounded-xl border border-zinc-200 p-6 mb-6">
+              <div className="bg-white rounded-xl border border-zinc-200 p-4 sm:p-6 mb-6">
                 <h2 className="text-xl font-bold mb-6">বিলিং তথ্য</h2>
                 <div className="space-y-4">
                   <div>
@@ -163,7 +163,7 @@ export default function PackageOrder() {
                       className="w-full border border-zinc-300 rounded-md px-4 py-3 focus:ring-2 focus:ring-green-500 focus:outline-none"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-red-600 mb-1">বিভাগ *</label>
                       <select
@@ -214,7 +214,7 @@ export default function PackageOrder() {
               </div>
 
               {/* Package Selection */}
-              <div className="bg-white rounded-xl border border-zinc-200 p-6">
+              <div className="bg-white rounded-xl border border-zinc-200 p-4 sm:p-6">
                 <h2 className="text-xl font-bold mb-6">কোনটি নিতে চান সিলেক্ট করুন।</h2>
                 <div className="space-y-4">
                   {packages.map((pkg: any) => {
@@ -284,7 +284,7 @@ export default function PackageOrder() {
 
             {/* Right Column - Order Summary */}
             <div className="w-full lg:w-[380px]">
-              <div className="bg-white rounded-xl border border-zinc-200 p-6 sticky top-24">
+              <div className="bg-white rounded-xl border border-zinc-200 p-4 sm:p-6 sticky top-24">
                 <h2 className="text-xl font-bold mb-4">আপনার অর্ডার</h2>
 
                 {/* Header */}
