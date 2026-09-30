@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import { MessageCircle } from 'lucide-react';
 
 interface SelectedPackage {
   packageId: number;
@@ -349,11 +350,20 @@ export default function PackageOrder() {
         </form>
 
         {/* Bottom help text */}
-        <div className="text-center mt-10 pb-8">
+        <div className="text-center mt-10 pb-8 flex flex-col items-center gap-4">
           <p className="text-lg font-bold">
             অর্ডার করতে কোন সমস্যা হলে কল করুনঃ{' '}
-            <a href="tel:01341537082" className="text-green-600 hover:underline">01341-537082</a>
+            <a href="tel:+8801353366144" className="text-green-600 hover:underline">+8801353366144</a>
           </p>
+          <a
+            href="https://wa.me/8801353366144"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-full font-bold hover:bg-green-600 transition-colors shadow-md hover:shadow-lg w-fit"
+          >
+            <MessageCircle className="w-5 h-5" />
+            হোয়াটসঅ্যাপে মেসেজ দিন
+          </a>
         </div>
       </div>
     </div>
