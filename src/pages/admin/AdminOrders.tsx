@@ -1,0 +1,414 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Search, ChevronDown, ChevronUp, RefreshCw, Truck } from 'lucide-react';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000';
+
+const steadfastStatusColors: Record<string, string> = {
+  'in_review': 'bg-yellow-100 text-yellow-800',
+  'pending': 'bg-yellow-100 text-yellow-800',
+  'delivered': 'bg-green-100 text-green-800',
+  'partial_delivered': 'bg-green-100 text-green-800',
+  'cancelled': 'bg-red-100 text-red-800',
+  'hold': 'bg-orange-100 text-orange-800',
+  'unknown': 'bg-gray-100 text-gray-800',
+};
+
+function getSteadfastBadgeClass(status: string | null): string {
+  if (!status) return 'bg-gray-100 text-gray-500';
+  return steadfastStatusColors[status] || 'bg-gray-100 text-gray-800';
+}
+
+export default function AdminOrders() {
+  const token = localStorage.getItem('admin_token');
+  const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
+  const [bulkStatus, setBulkStatus] = useState('Processing');
+  const [refreshingIds, setRefreshingIds] = useState<number[]>([]);
+  
+  const statusFilter = searchParams.get('status') || 'All';
+  const setStatusFilter = (status: string) => {
+    setSelectedOrders([]);
+    if (status === 'All') {
+      searchParams.delete('status');
+    } else {
+      searchParams.set('status', status);
+    }
+    setSearchParams(searchParams);
+  };
+  
+  const { data: orders, isLoading, isError, error } = useQuery({
+    queryKey: ['admin_orders'],
+    queryFn: async () => {
+      const res = await axios.get(`${API_URL}/api/v1/admin/orders`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return res.data;
+    }
+  });
+
+  const updateStatus = useMutation({
+    mutationFn: async ({ id, status }: { id: number, status: string }) => {
+      return axios.put(`${API_URL}/api/v1/admin/orders/${id}/status`, { status }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin_dashboard'] });
+    }
+  });
+
+  const updateBulkStatus = useMutation({
+    mutationFn: async ({ order_ids, status }: { order_ids: number[], status: string }) => {
+      return axios.put(`${API_URL}/api/v1/admin/orders/bulk-status`, { order_ids, status }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+      queryClient.invalidateQueries({ queryKey: ['admin_dashboard'] });
+      setSelectedOrders([]);
+    }
+  });
+
+  const refreshSteadfastStatus = async (orderId: number) => {
+    setRefreshingIds(prev => [...prev, orderId]);
+    try {
+      await axios.get(`${API_URL}/api/v1/admin/orders/${orderId}/steadfast-status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to refresh SteadFast status:', err);
+    } finally {
+      setRefreshingIds(prev => prev.filter(id => id !== orderId));
+    }
+  };
+
+  const refreshBulkSteadfastStatus = async () => {
+    setRefreshingIds(prev => [...prev, ...selectedOrders]);
+    try {
+      await axios.post(`${API_URL}/api/v1/admin/orders/bulk-steadfast-status`, { order_ids: selectedOrders }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to bulk refresh SteadFast status:', err);
+    } finally {
+      setRefreshingIds([]);
+    }
+  };
+
+  const resetSteadfast = async (orderId: number) => {
+    if (!window.confirm('Clear SteadFast data for this order? You can re-create a consignment by setting it to Processing again.')) return;
+    try {
+      await axios.delete(`${API_URL}/api/v1/admin/orders/${orderId}/steadfast-reset`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      queryClient.invalidateQueries({ queryKey: ['admin_orders'] });
+    } catch (err) {
+      console.error('Failed to reset SteadFast:', err);
+    }
+  };
+
+  if (isLoading) return <div className="p-8 text-center">Loading orders...</div>;
+  if (isError) {
+    const isAuthError = (error as any)?.response?.status === 401;
+    return (
+      <div className="p-8 text-center text-red-600">
+        <h3 className="text-xl font-bold mb-2">Error loading orders</h3>
+        <p>{isAuthError ? "Your session has expired. Please log out and log in again." : (error as Error).message}</p>
+      </div>
+    );
+  }
+
+  const filteredOrders = orders?.filter((o: any) => {
+    // Status filter
+    if (statusFilter !== 'All' && o.status !== statusFilter) return false;
+    // Search filter
+    const q = searchQuery.toLowerCase();
+    return (
+      o.customer_name?.toLowerCase().includes(q) ||
+      o.phone?.toLowerCase().includes(q) ||
+      o.order_number?.toLowerCase().includes(q)
+    );
+  });
+
+  const toggleExpand = (id: number) => {
+    setExpandedOrderId(expandedOrderId === id ? null : id);
+  };
+
+  // Check if any selected orders have steadfast consignments
+  const selectedHaveSteadfast = selectedOrders.some(id => {
+    const order = orders?.find((o: any) => o.id === id);
+    return order?.steadfast_consignment_id;
+  });
+
+  return (
+    <div>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+        <h2 className="text-3xl font-bold text-gray-800">Order Management</h2>
+        
+        <div className="flex items-center gap-4 w-full md:w-auto flex-wrap">
+          {selectedOrders.length > 0 && (
+            <div className="flex items-center gap-2 bg-blue-50 p-2 rounded-lg border border-blue-100">
+              <span className="text-sm text-blue-700 font-medium px-2">{selectedOrders.length} selected</span>
+              <select 
+                value={bulkStatus}
+                onChange={(e) => setBulkStatus(e.target.value)}
+                className="text-sm border rounded p-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+              <button 
+                onClick={() => updateBulkStatus.mutate({ order_ids: selectedOrders, status: bulkStatus })}
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors"
+                disabled={updateBulkStatus.isPending}
+              >
+                Apply
+              </button>
+              {selectedHaveSteadfast && (
+                <button 
+                  onClick={refreshBulkSteadfastStatus}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium py-1.5 px-3 rounded transition-colors flex items-center gap-1"
+                  disabled={refreshingIds.length > 0}
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.length > 0 ? 'animate-spin' : ''}`} />
+                  Refresh SF
+                </button>
+              )}
+            </div>
+          )}
+          <div className="relative flex-1 md:flex-none">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search name, phone, or ID..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80"
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Status Filter Tabs */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {['All', 'Pending', 'Processing', 'Completed', 'Cancelled'].map((status) => {
+          const count = status === 'All' 
+            ? orders?.length || 0 
+            : orders?.filter((o: any) => o.status === status).length || 0;
+          const isActive = statusFilter === status;
+          return (
+            <button
+              key={status}
+              onClick={() => setStatusFilter(status)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2
+                ${isActive 
+                  ? 'bg-blue-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+                }`}
+            >
+              {status}
+              <span className={`text-xs px-1.5 py-0.5 rounded-full ${isActive ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-500'}`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left min-w-[900px]">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="p-4 w-12">
+                  <input 
+                    type="checkbox" 
+                    className="rounded border-gray-300 w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                    checked={filteredOrders?.length > 0 && selectedOrders.length === filteredOrders?.length}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedOrders(filteredOrders.map((o: any) => o.id));
+                      } else {
+                        setSelectedOrders([]);
+                      }
+                    }}
+                  />
+                </th>
+                <th className="p-4 w-10"></th>
+                <th className="p-4 font-semibold text-gray-600">#</th>
+                <th className="p-4 font-semibold text-gray-600">Order ID</th>
+                <th className="p-4 font-semibold text-gray-600">Customer</th>
+                <th className="p-4 font-semibold text-gray-600">Phone</th>
+                <th className="p-4 font-semibold text-gray-600">Date</th>
+                <th className="p-4 font-semibold text-gray-600">Total</th>
+                <th className="p-4 font-semibold text-gray-600">Status</th>
+                <th className="p-4 font-semibold text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Truck className="w-4 h-4" />
+                    SteadFast
+                  </div>
+                </th>
+                <th className="p-4 font-semibold text-gray-600">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders?.map((o: any, index: number) => (
+                <React.Fragment key={o.id}>
+                  <tr className={`border-b hover:bg-gray-50 cursor-pointer ${expandedOrderId === o.id ? 'bg-blue-50' : ''}`} onClick={() => toggleExpand(o.id)}>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      <input 
+                        type="checkbox"
+                        className="rounded border-gray-300 w-4 h-4 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                        checked={selectedOrders.includes(o.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedOrders([...selectedOrders, o.id]);
+                          } else {
+                            setSelectedOrders(selectedOrders.filter((id: number) => id !== o.id));
+                          }
+                        }}
+                      />
+                    </td>
+                    <td className="p-4 text-gray-400">
+                      {expandedOrderId === o.id ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                    </td>
+                    <td className="p-4 text-gray-500">{index + 1}</td>
+                    <td className="p-4 font-medium">{o.order_number}</td>
+                    <td className="p-4">{o.customer_name}</td>
+                    <td className="p-4 text-gray-600">{o.phone}</td>
+                    <td className="p-4 text-sm text-gray-600">{new Date(o.created_at).toLocaleDateString()}</td>
+                    <td className="p-4 font-semibold">৳ {o.total_amount}</td>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium
+                        ${o.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ''}
+                        ${o.status === 'Completed' ? 'bg-green-100 text-green-800' : ''}
+                        ${o.status === 'Processing' ? 'bg-blue-100 text-blue-800' : ''}
+                        ${o.status === 'Cancelled' ? 'bg-red-100 text-red-800' : ''}
+                      `}>
+                        {o.status}
+                      </span>
+                    </td>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      {o.steadfast_consignment_id ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSteadfastBadgeClass(o.steadfast_status)}`}>
+                            {o.steadfast_status || 'N/A'}
+                          </span>
+                          <button
+                            onClick={() => refreshSteadfastStatus(o.id)}
+                            className="text-gray-400 hover:text-blue-600 transition-colors"
+                            title="Refresh SteadFast status"
+                            disabled={refreshingIds.includes(o.id)}
+                          >
+                            <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.includes(o.id) ? 'animate-spin text-blue-600' : ''}`} />
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-xs text-gray-400">—</span>
+                      )}
+                    </td>
+                    <td className="p-4" onClick={(e) => e.stopPropagation()}>
+                      <select 
+                        value={o.status}
+                        onChange={(e) => updateStatus.mutate({ id: o.id, status: e.target.value })}
+                        disabled={o.status === 'Completed' || o.status === 'Cancelled'}
+                        className={`text-sm border rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${(o.status === 'Completed' || o.status === 'Cancelled') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        <option value="Pending" disabled={o.status === 'Processing' || o.status === 'Completed' || o.status === 'Cancelled'}>Pending</option>
+                        <option value="Processing" disabled={o.status === 'Completed' || o.status === 'Cancelled'}>Processing</option>
+                        <option value="Completed" disabled={o.status === 'Cancelled'}>Completed</option>
+                        <option value="Cancelled" disabled={o.status === 'Completed'}>Cancelled</option>
+                      </select>
+                    </td>
+                  </tr>
+                  
+                  {expandedOrderId === o.id && (
+                    <tr className="bg-gray-50 border-b">
+                      <td colSpan={11} className="p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                          <div>
+                            <h4 className="font-semibold text-gray-700 mb-2">Customer Details</h4>
+                            <p className="text-sm text-gray-600 mb-1"><span className="font-medium text-gray-700">Name:</span> {o.customer_name}</p>
+                            <p className="text-sm text-gray-600 mb-1"><span className="font-medium text-gray-700">Phone:</span> {o.phone}</p>
+                            <p className="text-sm text-gray-600"><span className="font-medium text-gray-700">Address:</span> {o.address || 'No address provided'}</p>
+                          </div>
+                          <div>
+                            <h4 className="font-semibold text-gray-700 mb-2">Order Items</h4>
+                            {o.items && o.items.length > 0 ? (
+                              <ul className="space-y-2">
+                                {o.items.map((item: any, i: number) => (
+                                  <li key={i} className="flex justify-between text-sm text-gray-600 border-b border-gray-200 pb-1 last:border-0 last:pb-0">
+                                    <span>{item.product_name} x {item.quantity}</span>
+                                    <span>৳ {(item.quantity * item.unit_price).toLocaleString()}</span>
+                                  </li>
+                                ))}
+                                <li className="flex justify-between text-sm font-semibold text-gray-800 pt-1">
+                                  <span>Total</span>
+                                  <span>৳ {o.total_amount?.toLocaleString()}</span>
+                                </li>
+                              </ul>
+                            ) : (
+                              <p className="text-sm text-gray-500">No items data available.</p>
+                            )}
+                          </div>
+                          {o.steadfast_consignment_id && (
+                            <div>
+                              <h4 className="font-semibold text-gray-700 mb-2">SteadFast Courier</h4>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Consignment ID:</span> {o.steadfast_consignment_id}
+                              </p>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Tracking Code:</span> {o.steadfast_tracking_code}
+                              </p>
+                              <p className="text-sm text-gray-600 mb-1">
+                                <span className="font-medium text-gray-700">Delivery Status:</span>{' '}
+                                <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getSteadfastBadgeClass(o.steadfast_status)}`}>
+                                  {o.steadfast_status || 'N/A'}
+                                </span>
+                              </p>
+                              <button
+                                onClick={() => refreshSteadfastStatus(o.id)}
+                                className="mt-2 text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors"
+                                disabled={refreshingIds.includes(o.id)}
+                              >
+                                <RefreshCw className={`w-3.5 h-3.5 ${refreshingIds.includes(o.id) ? 'animate-spin' : ''}`} />
+                                Refresh Status
+                              </button>
+                              <button
+                                onClick={() => resetSteadfast(o.id)}
+                                className="mt-1 text-sm text-red-500 hover:text-red-700 transition-colors"
+                              >
+                                ✕ Reset SteadFast
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+              {filteredOrders?.length === 0 && (
+                <tr>
+                  <td colSpan={11} className="p-8 text-center text-gray-500">No orders found matching your search.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
