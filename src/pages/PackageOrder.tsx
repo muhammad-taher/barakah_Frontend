@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
@@ -53,12 +53,19 @@ export default function PackageOrder() {
     }
   });
 
-  // Auto-select the first package when packages load
+  const location = useLocation();
+  const defaultPackageId = location.state?.selectedPackageId;
+
+  // Auto-select the default or first package when packages load
   useEffect(() => {
     if (packages.length > 0 && selectedPackages.length === 0) {
-      setSelectedPackages([{ packageId: packages[0].id, quantity: 1 }]);
+      if (defaultPackageId && packages.some((p: any) => p.id === defaultPackageId)) {
+        setSelectedPackages([{ packageId: defaultPackageId, quantity: 1 }]);
+      } else {
+        setSelectedPackages([{ packageId: packages[0].id, quantity: 1 }]);
+      }
     }
-  }, [packages]);
+  }, [packages, defaultPackageId]);
 
   const togglePackage = (pkgId: number) => {
     setSelectedPackages(prev => {

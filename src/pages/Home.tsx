@@ -172,6 +172,7 @@ export default function Home() {
                 )}
                 <Link
                   to="/package-order"
+                  state={{ selectedPackageId: pkg.id }}
                   className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-extrabold hover:bg-green-700 transition-colors w-fit text-sm"
                 >
                   অর্ডার করতে ক্লিক করুন
