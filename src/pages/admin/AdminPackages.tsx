@@ -11,6 +11,7 @@ export default function AdminPackages() {
     headline: '',
     description: '',
     image_url: '',
+    price: 0,
     product_id: '',
     active: true,
     order_index: 0
@@ -84,6 +85,7 @@ export default function AdminPackages() {
       headline: '',
       description: '',
       image_url: '',
+      price: 0,
       product_id: '',
       active: true,
       order_index: 0
@@ -96,6 +98,7 @@ export default function AdminPackages() {
       headline: pkg.headline,
       description: pkg.description,
       image_url: pkg.image_url,
+      price: pkg.price || 0,
       product_id: pkg.product_id || '',
       active: pkg.active,
       order_index: pkg.order_index
@@ -123,6 +126,7 @@ export default function AdminPackages() {
             <tr>
               <th className="p-4">Image</th>
               <th className="p-4">Headline</th>
+              <th className="p-4">Price</th>
               <th className="p-4">Order Index</th>
               <th className="p-4">Status</th>
               <th className="p-4 text-right">Actions</th>
@@ -141,6 +145,7 @@ export default function AdminPackages() {
                   )}
                 </td>
                 <td className="p-4 font-medium">{pkg.headline}</td>
+                <td className="p-4">৳{pkg.price?.toLocaleString()}</td>
                 <td className="p-4">{pkg.order_index}</td>
                 <td className="p-4">
                   <span className={`px-2 py-1 rounded text-xs ${pkg.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
@@ -166,7 +171,7 @@ export default function AdminPackages() {
             ))}
             {packages.length === 0 && (
               <tr>
-                <td colSpan={5} className="p-8 text-center text-gray-500">
+                <td colSpan={6} className="p-8 text-center text-gray-500">
                   No packages found. Add one to get started.
                 </td>
               </tr>
@@ -197,6 +202,20 @@ export default function AdminPackages() {
                   value={formData.description}
                   onChange={e => setFormData({...formData, description: e.target.value})}
                   className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none h-24"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price (৳)</label>
+                <input
+                  required
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price}
+                  onChange={e => setFormData({...formData, price: parseFloat(e.target.value) || 0})}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-1 focus:ring-black outline-none"
+                  placeholder="e.g. 890"
                 />
               </div>
 

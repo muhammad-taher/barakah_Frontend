@@ -71,8 +71,8 @@ export default function Home() {
         </div>
         <div className="relative z-10 flex justify-center w-full">
           <a
-            href="#order-section"
-            className="bg-black text-white px-8 py-3.5 rounded-full font-bold hover:bg-zinc-800 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
+            href="/package-order"
+            className="bg-green-600 text-white px-8 py-3.5 rounded-full font-extrabold hover:bg-green-700 transition-all duration-200 inline-flex items-center justify-center gap-2 text-[15px] shadow-lg hover:shadow-xl hover:scale-105"
           >
             অর্ডার করতে ক্লিক করুন
             <ArrowRight className="w-4 h-4" />
@@ -172,8 +172,8 @@ export default function Home() {
                   </div>
                 )}
                 <Link
-                  to={pkg.product_slug ? `/product/${pkg.product_slug}` : '/shop'}
-                  className="inline-flex items-center gap-2 bg-zinc-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-zinc-800 transition-colors w-fit text-sm"
+                  to="/package-order"
+                  className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-extrabold hover:bg-green-700 transition-colors w-fit text-sm"
                 >
                   অর্ডার করতে ক্লিক করুন
                   <ArrowRight className="w-4 h-4" />

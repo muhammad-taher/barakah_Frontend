@@ -6,6 +6,7 @@ import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
+import PackageOrder from './pages/PackageOrder';
 import OrderSuccess from './pages/OrderSuccess';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './components/AdminLayout';
@@ -41,6 +42,7 @@ function App() {
             <Route path="product/:slug" element={<ProductDetails />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
+            <Route path="package-order" element={<PackageOrder />} />
             <Route path="order-success" element={<OrderSuccess />} />
             <Route path="*" element={
               <div className="py-20 text-center">
