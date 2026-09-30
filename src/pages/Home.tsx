@@ -52,7 +52,6 @@ export default function Home() {
   const heroImage = isSettingsLoading ? undefined : (settings?.hero_image_url || DEFAULT_HERO_IMAGE);
   const promoTitle = settings?.promo_title || 'সাপ্তাহিক অফার\n৩০% পর্যন্ত ছাড়';
   const promoSubtitle = settings?.promo_subtitle || 'আমাদের নতুন কালেকশন থেকে বেছে নিন আপনার পছন্দের ড্রেস। শুধুমাত্র অনলাইনে সীমিত সময়ের অফার।';
-  const promoLink = settings?.promo_link || '/shop?sale=true';
   const promoImage = isSettingsLoading ? undefined : (settings?.promo_image_url || DEFAULT_PROMO_IMAGE);
 
   return (
@@ -224,8 +223,8 @@ export default function Home() {
             </h3>
             <p className="text-zinc-400 mb-8 max-w-md text-[15px] leading-relaxed">{promoSubtitle}</p>
             <div>
-              <Link to={promoLink} className="bg-white text-black px-7 py-3 rounded-full font-bold hover:bg-zinc-100 transition-colors inline-flex items-center gap-2 text-[15px]">
-                অফারগুলো দেখুন
+              <Link to="/package-order" className="bg-green-500 text-white px-7 py-3 rounded-full font-extrabold hover:bg-green-600 transition-colors inline-flex items-center gap-2 text-[15px]">
+                অর্ডার করতে ক্লিক করুন
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
