@@ -18,6 +18,22 @@ export default function ProductCard({ product }: { product: Product & { offer_pr
       image: product.image_url || (product.images && product.images[0]) || '',
       slug: product.slug,
     });
+    
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      event: 'add_to_cart',
+      ecommerce: {
+        currency: 'BDT',
+        value: displayPrice,
+        items: [{
+          item_id: String(product.id),
+          item_name: product.name,
+          price: displayPrice,
+          quantity: 1
+        }]
+      }
+    });
   };
 
   return (

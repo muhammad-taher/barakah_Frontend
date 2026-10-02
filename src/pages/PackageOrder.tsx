@@ -68,6 +68,28 @@ export default function PackageOrder() {
     }
   }, [packages, defaultPackageId]);
 
+  useEffect(() => {
+    const items = getSelectedItems();
+    if (items.length > 0) {
+      const totalValue = items.reduce((sum: number, item: any) => sum + (item.pkg.price * item.quantity), 0);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ ecommerce: null });
+      window.dataLayer.push({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: totalValue,
+          items: items.map((item: any) => ({
+            item_id: String(item.pkg.id),
+            item_name: item.pkg.headline || item.pkg.name,
+            price: item.pkg.price,
+            quantity: item.quantity
+          }))
+        }
+      });
+    }
+  }, [selectedPackages.length > 0]); // Fire once when packages are selected
+
   const togglePackage = (pkgId: number) => {
     setSelectedPackages(prev => {
       const exists = prev.find(s => s.packageId === pkgId);
@@ -109,6 +131,26 @@ export default function PackageOrder() {
       return;
     }
     setIsSubmitting(true);
+
+    // Fire add_payment_info event
+    const items = getSelectedItems();
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      event: 'add_payment_info',
+      ecommerce: {
+        currency: 'BDT',
+        value: total,
+        payment_type: 'Cash on Delivery',
+        items: items.map((item: any) => ({
+          item_id: String(item.pkg.id),
+          item_name: item.pkg.headline || item.pkg.name,
+          price: item.pkg.price,
+          quantity: item.quantity
+        }))
+      }
+    });
+
     try {
       const fullAddress = `${address}, ${district}, ${division}`;
       const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/orders/package-checkout`, {

@@ -21,6 +21,27 @@ export default function ProductDetails() {
       return res.data;
     }
   });
+
+  useEffect(() => {
+    if (product) {
+      const displayPrice = (product.offer_active && product.offer_price && product.offer_price < product.price) ? product.offer_price : product.price;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ ecommerce: null });
+      window.dataLayer.push({
+        event: 'view_item',
+        ecommerce: {
+          currency: 'BDT',
+          value: displayPrice,
+          items: [{
+            item_id: String(product.id),
+            item_name: product.name,
+            price: displayPrice,
+            item_category: product.category || ''
+          }]
+        }
+      });
+    }
+  }, [product]);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
 
@@ -39,6 +60,23 @@ export default function ProductDetails() {
       image: product.image_url || (product.images && product.images[0]) || 'https://via.placeholder.com/400x500?text=No+Image',
       slug: product.slug
     }, quantity);
+    
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      event: 'add_to_cart',
+      ecommerce: {
+        currency: 'BDT',
+        value: displayPrice * quantity,
+        items: [{
+          item_id: String(product.id),
+          item_name: product.name,
+          price: displayPrice,
+          quantity: quantity
+        }]
+      }
+    });
+
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   };

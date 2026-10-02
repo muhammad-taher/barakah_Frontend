@@ -21,6 +21,27 @@ export default function Checkout() {
     setCartItems(getCart());
   }, []);
 
+  useEffect(() => {
+    if (cartItems.length > 0) {
+      const totalValue = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ ecommerce: null });
+      window.dataLayer.push({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'BDT',
+          value: totalValue,
+          items: cartItems.map(item => ({
+            item_id: String(item.id),
+            item_name: item.name,
+            price: item.price,
+            quantity: item.quantity
+          }))
+        }
+      });
+    }
+  }, [cartItems.length]); // Only run when cart length changes (initially loads)
+
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = 0;
   const total = subtotal + shipping;
@@ -32,6 +53,25 @@ export default function Checkout() {
       return;
     }
     setIsSubmitting(true);
+    
+    // Fire add_payment_info event (COD is default)
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ ecommerce: null });
+    window.dataLayer.push({
+      event: 'add_payment_info',
+      ecommerce: {
+        currency: 'BDT',
+        value: total,
+        payment_type: 'Cash on Delivery',
+        items: cartItems.map(item => ({
+          item_id: String(item.id),
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        }))
+      }
+    });
+
     try {
       const items = cartItems.map(item => ({ product_id: Number(item.id), quantity: item.quantity }));
       const fullAddress = `${address}, ${area}, ${district}, ${division}`;
