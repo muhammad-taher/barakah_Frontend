@@ -28,3 +28,9 @@ export interface CartItem {
   quantity: number;
   variant?: string;
 }
+
+declare global {
+  interface Window {
+    dataLayer: any[];
+  }
+}

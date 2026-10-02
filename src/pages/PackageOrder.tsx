@@ -117,7 +117,17 @@ export default function PackageOrder() {
         address: fullAddress,
         packages: selectedPackages.map(sp => ({ package_id: sp.packageId, quantity: sp.quantity }))
       });
-      navigate('/order-success', { state: { orderNumber: res.data.order_number, totalAmount: res.data.total_amount } });
+      const purchaseData = {
+        orderNumber: res.data.order_number,
+        totalAmount: res.data.total_amount,
+        items: getSelectedItems().map((item: any) => ({
+          item_id: String(item.pkg.id),
+          item_name: item.pkg.headline || item.pkg.name,
+          price: item.pkg.price,
+          quantity: item.quantity
+        }))
+      };
+      navigate('/order-success', { state: purchaseData });
     } catch (err: any) {
       const msg = err?.response?.data?.error || 'অর্ডার করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
       alert(msg);

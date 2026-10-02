@@ -41,8 +41,18 @@ export default function Checkout() {
         address: fullAddress,
         items
       });
+      const purchaseData = {
+        orderNumber: res.data.order_number,
+        totalAmount: res.data.total_amount,
+        items: cartItems.map(item => ({
+          item_id: String(item.id),
+          item_name: item.name,
+          price: item.price,
+          quantity: item.quantity
+        }))
+      };
       clearCart();
-      navigate('/order-success', { state: { orderNumber: res.data.order_number, totalAmount: res.data.total_amount } });
+      navigate('/order-success', { state: purchaseData });
     } catch (err: any) {
       const msg = err?.response?.data?.error || 'অর্ডার করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।';
       alert(msg);

@@ -3,12 +3,28 @@ import { useEffect } from 'react';
 import { CheckCircle } from 'lucide-react';
 
 export default function OrderSuccess() {
+  const location = useLocation();
+  const state = location.state as { orderNumber?: string; totalAmount?: number; items?: any[] } | null;
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-  
-  const location = useLocation();
-  const state = location.state as { orderNumber?: string; totalAmount?: number } | null;
+
+    if (state?.orderNumber && state?.totalAmount) {
+      // Push ecommerce purchase event to dataLayer
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object
+      window.dataLayer.push({
+        event: 'purchase',
+        event_id: state.orderNumber,
+        ecommerce: {
+          transaction_id: state.orderNumber,
+          value: state.totalAmount,
+          currency: 'BDT',
+          items: state.items || []
+        }
+      });
+    }
+  }, [state]);
 
   return (
     <div className="max-w-xl mx-auto px-4 py-16 text-center">
