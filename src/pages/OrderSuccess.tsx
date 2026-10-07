@@ -1,15 +1,24 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { CheckCircle } from 'lucide-react';
 
 export default function OrderSuccess() {
   const location = useLocation();
   const state = location.state as { orderNumber?: string; totalAmount?: number; items?: any[] } | null;
+  const purchaseFiredRef = useRef(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
     if (state?.orderNumber && state?.totalAmount) {
+      // Guard: prevent duplicate purchase events for the same order
+      const storageKey = `purchase_fired_${state.orderNumber}`;
+      if (purchaseFiredRef.current || sessionStorage.getItem(storageKey)) {
+        return;
+      }
+      purchaseFiredRef.current = true;
+      sessionStorage.setItem(storageKey, '1');
+
       // Push ecommerce purchase event to dataLayer
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object
