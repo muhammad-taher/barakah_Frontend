@@ -213,8 +213,8 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                   key={i}
                   className={
                     i === 0
-                      ? 'text-lg sm:text-2xl md:text-3xl font-bold text-zinc-900 leading-snug mb-2'
-                      : 'text-sm sm:text-base md:text-lg text-zinc-700 font-medium leading-relaxed'
+                      ? 'text-lg sm:text-2xl md:text-3xl font-bold text-zinc-900 leading-snug mb-2 break-words'
+                      : 'text-sm sm:text-base md:text-lg text-zinc-700 font-medium leading-relaxed break-words'
                   }
                 >
                   {line}
@@ -319,7 +319,7 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                         }`}
                         onClick={() => togglePackage(pkg.id)}
                       >
-                        <div className="flex items-start gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4">
                           {/* Radio/Checkbox */}
                           <div className="mt-1 shrink-0">
                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
@@ -329,23 +329,27 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                             </div>
                           </div>
 
-                          {/* Image */}
-                          {pkg.image_url && (
-                            <div className="w-20 h-24 sm:w-24 sm:h-28 shrink-0 rounded-lg overflow-hidden border border-zinc-200">
-                              <img src={pkg.image_url} alt={pkg.headline} className="w-full h-full object-cover" />
-                            </div>
-                          )}
-
-                          {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start gap-2 flex-wrap">
-                              <h4 className="font-bold text-sm md:text-base text-zinc-900">{pkg.headline}</h4>
-                              {pkg.offer_active && (
-                                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5">অফার</span>
+                            {/* Thumbnail sits beside the title only, so the description
+                                below can use the full width of this column. */}
+                            <div className="flex items-start gap-3">
+                              {pkg.image_url && (
+                                <div className="w-16 h-20 sm:w-24 sm:h-28 shrink-0 rounded-lg overflow-hidden border border-zinc-200">
+                                  <img src={pkg.image_url} alt={pkg.headline} className="w-full h-full object-cover" />
+                                </div>
                               )}
+                              <div className="flex-1 min-w-0 flex items-start gap-2 flex-wrap">
+                                <h4 className="font-bold text-sm md:text-base text-zinc-900 break-words [overflow-wrap:anywhere]">
+                                  {pkg.headline}
+                                </h4>
+                                {pkg.offer_active && (
+                                  <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5">অফার</span>
+                                )}
+                              </div>
                             </div>
+
                             {pkg.description && (
-                              <div className="text-xs md:text-sm text-zinc-600 mt-2 prose prose-sm prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
+                              <div className="text-xs md:text-sm text-zinc-600 mt-3 prose prose-sm prose-zinc max-w-none break-words [overflow-wrap:anywhere] prose-p:my-1 prose-ul:my-1 prose-ul:pl-5 prose-li:my-0.5">
                                 <ReactMarkdown>{pkg.description}</ReactMarkdown>
                               </div>
                             )}
@@ -366,12 +370,12 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                                 >+</button>
                               </div>
                               {pkg.offer_active && pkg.original_price ? (
-                                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 ml-1">
+                                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                   <span className="font-bold text-green-600 text-sm sm:text-base whitespace-nowrap">৳{pkg.price?.toLocaleString()}</span>
                                   <span className="text-xs sm:text-sm text-zinc-400 line-through whitespace-nowrap">৳{pkg.original_price?.toLocaleString()}</span>
                                 </div>
                               ) : (
-                                <span className="font-bold text-zinc-900 ml-1 whitespace-nowrap">৳{pkg.price?.toLocaleString()}</span>
+                                <span className="font-bold text-zinc-900 whitespace-nowrap">৳{pkg.price?.toLocaleString()}</span>
                               )}
                             </div>
                           </div>
@@ -407,7 +411,7 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium">{item.pkg.headline}</p>
+                        <p className="text-sm font-medium break-words [overflow-wrap:anywhere]">{item.pkg.headline}</p>
                         <p className="text-xs text-zinc-400">× {item.quantity}</p>
                       </div>
                       {item.pkg.offer_active && item.pkg.original_price ? (

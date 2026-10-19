@@ -15,7 +15,7 @@ export default function ContentSections({ sections }: { sections: ContentSection
       {sections.map(section => (
         <div key={section.id}>
           <div className="bg-[#E8883C] rounded-full px-6 py-3 md:py-4 mb-5">
-            <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold text-center leading-snug">
+            <h3 className="text-white text-lg sm:text-xl md:text-2xl font-bold text-center leading-snug break-words">
               {section.heading}
             </h3>
           </div>
@@ -26,7 +26,7 @@ export default function ContentSections({ sections }: { sections: ContentSection
                 <span className="w-6 h-6 rounded-full bg-[#E8883C] flex items-center justify-center shrink-0 mt-0.5">
                   <ArrowRight className="w-3.5 h-3.5 text-white" strokeWidth={3} />
                 </span>
-                <span className="text-zinc-800 font-semibold text-[15px] md:text-base leading-relaxed">
+                <span className="min-w-0 text-zinc-800 font-semibold text-[15px] md:text-base leading-relaxed break-words [overflow-wrap:anywhere]">
                   {bullet}
                 </span>
               </li>
