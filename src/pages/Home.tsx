@@ -147,7 +147,7 @@ export default function Home() {
         <>
           <section className="max-w-6xl mx-auto px-4 w-full">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-center mb-6">{galleryTitle}</h2>
-            <ImageSlider images={galleryImages} aspectClass="aspect-[4/3]" />
+            <ImageSlider images={galleryImages} aspectClass="aspect-[4/3]" maxWidthClass="max-w-4xl" />
           </section>
 
           {/* Order CTA */}
@@ -178,7 +178,7 @@ export default function Home() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">কাস্টমার রিভিউ</h2>
             <p className="text-zinc-500">আমাদের সম্মানিত গ্রাহকদের মতামত</p>
           </div>
-          <ImageSlider images={reviews} aspectClass="aspect-[3/4]" objectFit="contain" />
+          <ImageSlider images={reviews} aspectClass="aspect-[3/4]" maxWidthClass="max-w-lg" objectFit="contain" />
         </section>
       )}
 

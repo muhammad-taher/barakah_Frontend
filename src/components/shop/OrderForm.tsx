@@ -26,6 +26,12 @@ interface OrderFormProps {
   defaultPackageId?: number;
 }
 
+/** Shown above the form; overridable from Admin → Settings (`order_form_promo`). */
+const DEFAULT_PROMO = `এখনই সংগ্রহ করুন আমাদের প্রিমিয়াম রেডিমেড ফার্নিচার বার্নিশ
+📦 সারা বাংলাদেশে ডেলিভারি চার্জ সম্পূর্ণ ফ্রি!
+
+✨ আপনার পুরোনো ফার্নিচারকে দিন নতুনের মতো উজ্জ্বল ও ঝকঝকে ভাব।`;
+
 export default function OrderForm({ defaultPackageId }: OrderFormProps) {
   const navigate = useNavigate();
 
@@ -54,6 +60,16 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
       return res.data;
     }
   });
+
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`);
+      return res.data;
+    }
+  });
+
+  const promoText: string = settings?.order_form_promo ?? DEFAULT_PROMO;
 
   // Auto-select the default or first package when packages load
   useEffect(() => {
@@ -186,6 +202,28 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
       </div>
 
       <div className="bg-gray-50 px-4 py-8 rounded-b-2xl border border-t-0 border-zinc-200">
+        {/* Promotional copy sitting on the form background */}
+        {promoText.trim() && (
+          <div className="mb-8 text-center">
+            {promoText.split('\n').map((line, i) =>
+              line.trim() === '' ? (
+                <div key={i} className="h-3" />
+              ) : (
+                <p
+                  key={i}
+                  className={
+                    i === 0
+                      ? 'text-lg sm:text-2xl md:text-3xl font-bold text-zinc-900 leading-snug mb-2'
+                      : 'text-sm sm:text-base md:text-lg text-zinc-700 font-medium leading-relaxed'
+                  }
+                >
+                  {line}
+                </p>
+              )
+            )}
+          </div>
+        )}
+
         <form onSubmit={handlePlaceOrder}>
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Left Column - Billing + Packages */}
@@ -293,21 +331,21 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
 
                           {/* Image */}
                           {pkg.image_url && (
-                            <div className="w-16 h-20 shrink-0 rounded-lg overflow-hidden border border-zinc-200">
+                            <div className="w-20 h-24 sm:w-24 sm:h-28 shrink-0 rounded-lg overflow-hidden border border-zinc-200">
                               <img src={pkg.image_url} alt={pkg.headline} className="w-full h-full object-cover" />
                             </div>
                           )}
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-start gap-2 flex-wrap">
                               <h4 className="font-bold text-sm md:text-base text-zinc-900">{pkg.headline}</h4>
                               {pkg.offer_active && (
-                                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0">অফার</span>
+                                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0 mt-0.5">অফার</span>
                               )}
                             </div>
                             {pkg.description && (
-                              <div className="text-xs md:text-sm text-zinc-500 mt-1 prose prose-sm prose-zinc line-clamp-3">
+                              <div className="text-xs md:text-sm text-zinc-600 mt-2 prose prose-sm prose-zinc max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0.5">
                                 <ReactMarkdown>{pkg.description}</ReactMarkdown>
                               </div>
                             )}
@@ -369,7 +407,7 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium line-clamp-2">{item.pkg.headline}</p>
+                        <p className="text-sm font-medium">{item.pkg.headline}</p>
                         <p className="text-xs text-zinc-400">× {item.quantity}</p>
                       </div>
                       {item.pkg.offer_active && item.pkg.original_price ? (

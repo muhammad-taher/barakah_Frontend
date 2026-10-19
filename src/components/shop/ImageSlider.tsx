@@ -9,18 +9,18 @@ interface SlideImage {
 
 interface ImageSliderProps {
   images: SlideImage[];
-  /** Tailwind aspect-ratio class for each slide frame. */
+  /** Tailwind aspect-ratio class for the slide frame. */
   aspectClass?: string;
+  /** Caps how wide the image gets on large screens; full width on phones. */
+  maxWidthClass?: string;
   objectFit?: 'cover' | 'contain';
 }
 
-/**
- * Carousel showing up to three images at once: the active one centred and
- * emphasised, its neighbours smaller and dimmed on either side.
- */
+/** One large image at a time, with arrows, dots and swipe to move between them. */
 export default function ImageSlider({
   images,
   aspectClass = 'aspect-[4/3]',
+  maxWidthClass = 'max-w-4xl',
   objectFit = 'cover',
 }: ImageSliderProps) {
   const [index, setIndex] = useState(0);
@@ -48,94 +48,53 @@ export default function ImageSlider({
     setTouchStartX(null);
   };
 
-  const fitClass = objectFit === 'cover' ? 'object-cover' : 'object-contain';
   const current = images[safeIndex];
-  // With only two images the "previous" and "next" neighbour are the same one,
-  // so show it on a single side instead of duplicating it.
-  const prevImage = count > 2 ? images[(safeIndex - 1 + count) % count] : null;
-  const nextImage = count > 1 ? images[(safeIndex + 1) % count] : null;
-
-  // Narrow peeks on phones so the focused image gets most of the width.
-  const sideClasses =
-    'w-[12%] sm:w-[22%] shrink-0 cursor-pointer transition-all duration-300 opacity-45 hover:opacity-70 scale-90 hover:scale-95';
-  const sidePlaceholder = 'w-[12%] sm:w-[22%] shrink-0';
+  const fitClass = objectFit === 'cover' ? 'object-cover' : 'object-contain';
 
   return (
-    <div className="relative">
+    <div className={`${maxWidthClass} mx-auto`}>
       <div
-        className="flex items-center justify-center gap-2 sm:gap-4"
+        className={`relative ${aspectClass} w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 shadow-xl`}
         onTouchStart={e => setTouchStartX(e.touches[0].clientX)}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Previous (dimmed) */}
-        {prevImage ? (
-          <button type="button" onClick={prev} aria-label="আগের ছবি" className={sideClasses}>
-            <div className={`${aspectClass} w-full overflow-hidden rounded-xl bg-zinc-100 border border-zinc-200`}>
-              <img src={prevImage.image_url} alt="" className={`w-full h-full ${fitClass}`} loading="lazy" />
-            </div>
-          </button>
-        ) : (
-          count > 1 && <div className={sidePlaceholder} aria-hidden="true" />
-        )}
+        <img
+          src={current.image_url}
+          alt={current.caption || `Slide ${safeIndex + 1}`}
+          className={`w-full h-full ${fitClass}`}
+          loading={safeIndex === 0 ? 'eager' : 'lazy'}
+        />
 
-        {/* Active (focused) */}
-        <div className={`${count > 1 ? 'w-[72%] sm:w-[56%]' : 'w-full max-w-xl'} shrink-0 transition-all duration-300`}>
-          <div
-            className={`relative ${aspectClass} w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 shadow-xl`}
-          >
-            <img
-              src={current.image_url}
-              alt={current.caption || `Slide ${safeIndex + 1}`}
-              className={`w-full h-full ${fitClass}`}
-              loading={safeIndex === 0 ? 'eager' : 'lazy'}
-            />
-
-            {current.caption && (
-              <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-3 pt-10 pb-3">
-                <p className="text-white text-xs sm:text-sm md:text-base font-medium text-center">
-                  {current.caption}
-                </p>
-              </div>
-            )}
-
-            {count > 1 && (
-              <div className="absolute top-2 right-2 bg-black/60 text-white text-[10px] sm:text-xs font-medium px-2 py-0.5 sm:py-1 rounded-full">
-                {safeIndex + 1} / {count}
-              </div>
-            )}
+        {current.caption && (
+          <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/70 to-transparent px-4 pt-12 pb-4">
+            <p className="text-white text-sm sm:text-base md:text-lg font-medium text-center">
+              {current.caption}
+            </p>
           </div>
-        </div>
-
-        {/* Next (dimmed) */}
-        {nextImage ? (
-          <button type="button" onClick={next} aria-label="পরের ছবি" className={sideClasses}>
-            <div className={`${aspectClass} w-full overflow-hidden rounded-xl bg-zinc-100 border border-zinc-200`}>
-              <img src={nextImage.image_url} alt="" className={`w-full h-full ${fitClass}`} loading="lazy" />
-            </div>
-          </button>
-        ) : (
-          count > 1 && <div className={sidePlaceholder} aria-hidden="true" />
         )}
 
-        {/* Arrow controls overlaid on the centre image */}
         {count > 1 && (
           <>
             <button
               type="button"
               onClick={prev}
               aria-label="আগের ছবি"
-              className="absolute left-[14%] sm:left-[23%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-2 sm:p-3 shadow-lg transition-colors"
             >
-              <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <button
               type="button"
               onClick={next}
               aria-label="পরের ছবি"
-              className="absolute right-[14%] sm:right-[23%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-2 sm:p-3 shadow-lg transition-colors"
             >
-              <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
+
+            <div className="absolute top-3 right-3 bg-black/60 text-white text-xs sm:text-sm font-medium px-2.5 py-1 rounded-full">
+              {safeIndex + 1} / {count}
+            </div>
           </>
         )}
       </div>

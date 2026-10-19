@@ -16,6 +16,7 @@ export default function AdminSettings() {
     guide_title: '',
     guide_image_url: '',
     gallery_title: '',
+    order_form_promo: '',
     // Custom offer settings
     offer_enabled: 'true',
     offer_title: '',
@@ -45,6 +46,7 @@ export default function AdminSettings() {
         guide_title: settings.guide_title || '',
         guide_image_url: settings.guide_image_url || '',
         gallery_title: settings.gallery_title || '',
+        order_form_promo: settings.order_form_promo ?? '',
         offer_enabled: settings.offer_enabled ?? 'true',
         offer_title: settings.offer_title || '',
         offer_subtitle: settings.offer_subtitle || '',
@@ -158,6 +160,25 @@ export default function AdminSettings() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Order form promo copy */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Order Form - Promotional Text</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            Shown on the form background, just above the billing fields. The first line is rendered large and bold;
+            the rest as supporting text. Leave empty to hide it.
+          </p>
+          <textarea
+            value={formData.order_form_promo}
+            onChange={e => setFormData({ ...formData, order_form_promo: e.target.value })}
+            className={`${inputCls} font-sans`}
+            rows={6}
+            placeholder={'এখনই সংগ্রহ করুন আমাদের প্রিমিয়াম রেডিমেড ফার্নিচার বার্নিশ\n📦 সারা বাংলাদেশে ডেলিভারি চার্জ সম্পূর্ণ ফ্রি!\n\n✨ আপনার পুরোনো ফার্নিচারকে দিন নতুনের মতো উজ্জ্বল ও ঝকঝকে ভাব।'}
+          />
+          <p className="text-xs text-gray-400 mt-1">
+            Blank lines become spacing. If you have never saved this field, the default text shown above is used.
+          </p>
         </div>
 
         {/* Before/After Gallery Heading */}
