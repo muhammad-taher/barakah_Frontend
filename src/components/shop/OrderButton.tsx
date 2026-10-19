@@ -22,11 +22,11 @@ export default function OrderButton({ targetId = 'order-form', className = '' }:
     <button
       type="button"
       onClick={scrollToForm}
-      className={`bg-[#001B3A] border-[3px] border-[#00BFFF] shadow-[0_0_15px_rgba(0,191,255,0.6)] text-white px-8 py-4 rounded-full font-extrabold hover:shadow-[0_0_25px_rgba(0,191,255,0.8)] hover:scale-105 transition-all duration-300 inline-flex items-center justify-center gap-3 text-lg md:text-xl animate-bounce ${className}`}
+      className={`bg-[#001B3A] border-2 sm:border-[3px] border-[#00BFFF] shadow-[0_0_12px_rgba(0,191,255,0.6)] sm:shadow-[0_0_15px_rgba(0,191,255,0.6)] text-white px-5 py-2.5 sm:px-8 sm:py-4 rounded-full font-extrabold hover:shadow-[0_0_25px_rgba(0,191,255,0.8)] hover:scale-105 transition-all duration-300 inline-flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-lg md:text-xl animate-bounce ${className}`}
     >
-      <ShoppingCart className="w-6 h-6 md:w-7 md:h-7" />
+      <ShoppingCart className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
       অর্ডার করতে ক্লিক করুন
-      <ArrowRight className="w-6 h-6 md:w-7 md:h-7" />
+      <ArrowRight className="w-4 h-4 sm:w-6 sm:h-6 md:w-7 md:h-7" />
     </button>
   );
 }

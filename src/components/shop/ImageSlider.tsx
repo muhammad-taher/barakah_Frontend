@@ -55,8 +55,10 @@ export default function ImageSlider({
   const prevImage = count > 2 ? images[(safeIndex - 1 + count) % count] : null;
   const nextImage = count > 1 ? images[(safeIndex + 1) % count] : null;
 
+  // Narrow peeks on phones so the focused image gets most of the width.
   const sideClasses =
-    'w-[20%] sm:w-[22%] shrink-0 cursor-pointer transition-all duration-300 opacity-45 hover:opacity-70 scale-90 hover:scale-95';
+    'w-[12%] sm:w-[22%] shrink-0 cursor-pointer transition-all duration-300 opacity-45 hover:opacity-70 scale-90 hover:scale-95';
+  const sidePlaceholder = 'w-[12%] sm:w-[22%] shrink-0';
 
   return (
     <div className="relative">
@@ -73,11 +75,11 @@ export default function ImageSlider({
             </div>
           </button>
         ) : (
-          count > 1 && <div className="w-[20%] sm:w-[22%] shrink-0" aria-hidden="true" />
+          count > 1 && <div className={sidePlaceholder} aria-hidden="true" />
         )}
 
         {/* Active (focused) */}
-        <div className={`${count > 1 ? 'w-[56%]' : 'w-full max-w-xl'} shrink-0 transition-all duration-300`}>
+        <div className={`${count > 1 ? 'w-[72%] sm:w-[56%]' : 'w-full max-w-xl'} shrink-0 transition-all duration-300`}>
           <div
             className={`relative ${aspectClass} w-full overflow-hidden rounded-2xl bg-zinc-100 border border-zinc-200 shadow-xl`}
           >
@@ -112,7 +114,7 @@ export default function ImageSlider({
             </div>
           </button>
         ) : (
-          count > 1 && <div className="w-[20%] sm:w-[22%] shrink-0" aria-hidden="true" />
+          count > 1 && <div className={sidePlaceholder} aria-hidden="true" />
         )}
 
         {/* Arrow controls overlaid on the centre image */}
@@ -122,7 +124,7 @@ export default function ImageSlider({
               type="button"
               onClick={prev}
               aria-label="আগের ছবি"
-              className="absolute left-[21%] sm:left-[23%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
+              className="absolute left-[14%] sm:left-[23%] top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
             >
               <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
@@ -130,7 +132,7 @@ export default function ImageSlider({
               type="button"
               onClick={next}
               aria-label="পরের ছবি"
-              className="absolute right-[21%] sm:right-[23%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
+              className="absolute right-[14%] sm:right-[23%] top-1/2 -translate-y-1/2 translate-x-1/2 z-10 bg-white/90 hover:bg-white text-zinc-800 rounded-full p-1.5 sm:p-2.5 shadow-lg transition-colors"
             >
               <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
             </button>
