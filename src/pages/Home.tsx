@@ -53,6 +53,9 @@ export default function Home() {
   const guideImage = settings?.guide_image_url;
   const guideTitle = settings?.guide_title || 'প্রোডাক্ট ব্যবহারের নির্দেশিকা';
   const galleryTitle = settings?.gallery_title || 'বার্নিশ করার আগে ও পরের অবস্থা';
+  // Image shown just above the customer reviews; heading is optional.
+  const comboImage = settings?.combo_image_url;
+  const comboTitle = settings?.combo_title;
 
   return (
     <div className="flex flex-col pb-0">
@@ -169,6 +172,23 @@ export default function Home() {
             <OrderButton />
           </section>
         </>
+      )}
+
+      {/* Image section above the customer reviews */}
+      {comboImage && (
+        <section className="max-w-4xl mx-auto px-4 w-full pb-12 md:pb-16">
+          {comboTitle && (
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-center mb-6 break-words">
+              {comboTitle}
+            </h2>
+          )}
+          <img
+            src={comboImage}
+            alt={comboTitle || 'Barakah'}
+            className="w-full h-auto rounded-2xl border border-zinc-200 shadow-sm"
+            loading="lazy"
+          />
+        </section>
       )}
 
       {/* Customer Reviews slider */}

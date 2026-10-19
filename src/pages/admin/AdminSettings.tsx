@@ -16,6 +16,8 @@ export default function AdminSettings() {
     guide_title: '',
     guide_image_url: '',
     gallery_title: '',
+    combo_title: '',
+    combo_image_url: '',
     order_form_promo: '',
     // Custom offer settings
     offer_enabled: 'true',
@@ -46,6 +48,8 @@ export default function AdminSettings() {
         guide_title: settings.guide_title || '',
         guide_image_url: settings.guide_image_url || '',
         gallery_title: settings.gallery_title || '',
+        combo_title: settings.combo_title || '',
+        combo_image_url: settings.combo_image_url || '',
         order_form_promo: settings.order_form_promo ?? '',
         offer_enabled: settings.offer_enabled ?? 'true',
         offer_title: settings.offer_title || '',
@@ -151,6 +155,43 @@ export default function AdminSettings() {
                     <button
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, guide_image_url: '' }))}
+                      className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Image above the customer reviews */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Home Page - Image Above Customer Reviews</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            A single image shown directly above the customer review slider (e.g. the full combo kit photo).
+            Leave the image empty to hide this section.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <label className={labelCls}>Section Heading <span className="text-gray-400 font-normal">(optional — leave blank for no heading)</span></label>
+              <input type="text" value={formData.combo_title} onChange={e => setFormData({...formData, combo_title: e.target.value})} className={inputCls} placeholder="যেমন: সম্পূর্ণ কম্বো প্যাকেজ" />
+            </div>
+
+            <div>
+              <label className={labelCls}>Image</label>
+              <div className="mt-1 flex flex-col gap-2">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'combo_image_url')} disabled={isUploading['combo_image_url']} className={fileInputCls} />
+                {isUploading['combo_image_url'] && <span className="text-sm text-blue-600">Uploading image...</span>}
+                <input type="url" value={formData.combo_image_url} onChange={e => setFormData({...formData, combo_image_url: e.target.value})} className={`${inputCls} !mt-0 text-sm`} placeholder="Or paste image URL here..." />
+                {formData.combo_image_url && (
+                  <div className="mt-2 relative rounded-lg overflow-hidden border border-gray-200 w-fit">
+                    <img src={formData.combo_image_url} alt="Preview" className="max-h-60 object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, combo_image_url: '' }))}
                       className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600"
                     >
                       Remove
