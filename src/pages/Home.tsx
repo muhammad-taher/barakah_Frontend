@@ -145,7 +145,7 @@ export default function Home() {
       {/* Before / after gallery slider */}
       {galleryImages.length > 0 && (
         <>
-          <section className="max-w-4xl mx-auto px-4 w-full">
+          <section className="max-w-6xl mx-auto px-4 w-full">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-center mb-6">{galleryTitle}</h2>
             <ImageSlider images={galleryImages} aspectClass="aspect-[4/3]" />
           </section>
@@ -173,7 +173,7 @@ export default function Home() {
 
       {/* Customer Reviews slider */}
       {reviews.length > 0 && (
-        <section className="max-w-3xl mx-auto px-4 w-full pb-12 md:pb-16">
+        <section className="max-w-5xl mx-auto px-4 w-full pb-12 md:pb-16">
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">কাস্টমার রিভিউ</h2>
             <p className="text-zinc-500">আমাদের সম্মানিত গ্রাহকদের মতামত</p>

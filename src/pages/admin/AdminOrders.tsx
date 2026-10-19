@@ -21,6 +21,28 @@ function getSteadfastBadgeClass(status: string | null): string {
   return steadfastStatusColors[status] || 'bg-gray-100 text-gray-800';
 }
 
+const ORDER_STATUSES = ['Pending', 'Hold', 'Processing', 'Completed', 'Cancelled'];
+
+// Mirrors ALLOWED_TRANSITIONS in backend/app/routes/admin.py
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  Pending: ['Hold', 'Processing', 'Cancelled'],
+  Hold: ['Processing', 'Cancelled'],
+  Processing: ['Completed', 'Cancelled'],
+  Completed: [],
+  Cancelled: [],
+};
+
+const canTransition = (from: string, to: string) =>
+  from === to || (ALLOWED_TRANSITIONS[from] || []).includes(to);
+
+const statusBadgeClasses: Record<string, string> = {
+  Pending: 'bg-yellow-100 text-yellow-800',
+  Hold: 'bg-orange-100 text-orange-800',
+  Processing: 'bg-blue-100 text-blue-800',
+  Completed: 'bg-green-100 text-green-800',
+  Cancelled: 'bg-red-100 text-red-800',
+};
+
 export default function AdminOrders() {
   const token = localStorage.getItem('admin_token');
   const queryClient = useQueryClient();
@@ -164,10 +186,9 @@ export default function AdminOrders() {
                 onChange={(e) => setBulkStatus(e.target.value)}
                 className="text-sm border rounded p-1.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
               >
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
+                {ORDER_STATUSES.map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
               </select>
               <button 
                 onClick={() => updateBulkStatus.mutate({ order_ids: selectedOrders, status: bulkStatus })}
@@ -203,7 +224,7 @@ export default function AdminOrders() {
 
       {/* Status Filter Tabs */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {['All', 'Pending', 'Processing', 'Completed', 'Cancelled'].map((status) => {
+        {['All', ...ORDER_STATUSES].map((status) => {
           const count = status === 'All' 
             ? orders?.length || 0 
             : orders?.filter((o: any) => o.status === status).length || 0;
@@ -291,12 +312,9 @@ export default function AdminOrders() {
                     <td className="p-4 text-sm text-gray-600">{new Date(o.created_at).toLocaleDateString()}</td>
                     <td className="p-4 font-semibold">৳ {o.total_amount}</td>
                     <td className="p-4" onClick={(e) => e.stopPropagation()}>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium
-                        ${o.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' : ''}
-                        ${o.status === 'Completed' ? 'bg-green-100 text-green-800' : ''}
-                        ${o.status === 'Processing' ? 'bg-blue-100 text-blue-800' : ''}
-                        ${o.status === 'Cancelled' ? 'bg-red-100 text-red-800' : ''}
-                      `}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        statusBadgeClasses[o.status] || 'bg-gray-100 text-gray-800'
+                      }`}>
                         {o.status}
                       </span>
                     </td>
@@ -323,13 +341,12 @@ export default function AdminOrders() {
                       <select 
                         value={o.status}
                         onChange={(e) => updateStatus.mutate({ id: o.id, status: e.target.value })}
-                        disabled={o.status === 'Completed' || o.status === 'Cancelled'}
-                        className={`text-sm border rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${(o.status === 'Completed' || o.status === 'Cancelled') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        disabled={(ALLOWED_TRANSITIONS[o.status] || []).length === 0}
+                        className={`text-sm border rounded p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 ${(ALLOWED_TRANSITIONS[o.status] || []).length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        <option value="Pending" disabled={o.status === 'Processing' || o.status === 'Completed' || o.status === 'Cancelled'}>Pending</option>
-                        <option value="Processing" disabled={o.status === 'Completed' || o.status === 'Cancelled'}>Processing</option>
-                        <option value="Completed" disabled={o.status === 'Cancelled'}>Completed</option>
-                        <option value="Cancelled" disabled={o.status === 'Completed'}>Cancelled</option>
+                        {ORDER_STATUSES.map(s => (
+                          <option key={s} value={s} disabled={!canTransition(o.status, s)}>{s}</option>
+                        ))}
                       </select>
                     </td>
                   </tr>

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, Package, DollarSign, Clock, RefreshCw } from 'lucide-react';
+import { ShoppingCart, Package, DollarSign, Clock, RefreshCw, PauseCircle } from 'lucide-react';
 
 export default function AdminDashboard() {
   const token = localStorage.getItem('admin_token');
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
   return (
     <div>
       <h2 className="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center">
           <div className="bg-blue-100 p-4 rounded-lg mr-4">
             <DollarSign className="text-blue-600" size={24} />
@@ -74,7 +74,19 @@ export default function AdminDashboard() {
             <p className="text-2xl font-bold text-gray-900">{stats?.pending_orders}</p>
           </div>
         </div>
-        <div 
+        <div
+          className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
+          onClick={() => navigate('/secure-hq/orders?status=Hold')}
+        >
+          <div className="bg-orange-100 p-4 rounded-lg mr-4">
+            <PauseCircle className="text-orange-600" size={24} />
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">On Hold</p>
+            <p className="text-2xl font-bold text-gray-900">{stats?.hold_orders ?? 0}</p>
+          </div>
+        </div>
+        <div
           className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center cursor-pointer hover:shadow-md transition-shadow"
           onClick={() => navigate('/secure-hq/orders?status=Processing')}
         >
