@@ -12,6 +12,10 @@ export default function AdminSettings() {
     promo_subtitle: '',
     promo_link: '',
     promo_image_url: '',
+    // Home page: product user guide image + slider headings
+    guide_title: '',
+    guide_image_url: '',
+    gallery_title: '',
     // Custom offer settings
     offer_enabled: 'true',
     offer_title: '',
@@ -38,6 +42,9 @@ export default function AdminSettings() {
         promo_subtitle: settings.promo_subtitle || '',
         promo_link: settings.promo_link || '',
         promo_image_url: settings.promo_image_url || '',
+        guide_title: settings.guide_title || '',
+        guide_image_url: settings.guide_image_url || '',
+        gallery_title: settings.gallery_title || '',
         offer_enabled: settings.offer_enabled ?? 'true',
         offer_title: settings.offer_title || '',
         offer_subtitle: settings.offer_subtitle || '',
@@ -117,9 +124,60 @@ export default function AdminSettings() {
           </div>
         </div>
 
+        {/* Product User Guide Image */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Home Page - Product User Guide Image</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            Shown below the trust badges, above the first "অর্ডার করতে ক্লিক করুন" button. Leave the image empty to hide this section.
+          </p>
+
+          <div className="space-y-4">
+            <div>
+              <label className={labelCls}>Section Heading</label>
+              <input type="text" value={formData.guide_title} onChange={e => setFormData({...formData, guide_title: e.target.value})} className={inputCls} placeholder="প্রোডাক্ট ব্যবহারের নির্দেশিকা" />
+            </div>
+
+            <div>
+              <label className={labelCls}>Guide Image</label>
+              <div className="mt-1 flex flex-col gap-2">
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, 'guide_image_url')} disabled={isUploading['guide_image_url']} className={fileInputCls} />
+                {isUploading['guide_image_url'] && <span className="text-sm text-blue-600">Uploading image...</span>}
+                <input type="url" value={formData.guide_image_url} onChange={e => setFormData({...formData, guide_image_url: e.target.value})} className={`${inputCls} !mt-0 text-sm`} placeholder="Or paste image URL here..." />
+                {formData.guide_image_url && (
+                  <div className="mt-2 relative rounded-lg overflow-hidden border border-gray-200 w-fit">
+                    <img src={formData.guide_image_url} alt="Guide Preview" className="max-h-60 object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, guide_image_url: '' }))}
+                      className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Before/After Gallery Heading */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Home Page - Before / After Slider Heading</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            The heading above the sliding before/after gallery. Manage the images themselves on the <strong>Before / After Gallery</strong> page.
+          </p>
+          <div>
+            <label className={labelCls}>Section Heading</label>
+            <input type="text" value={formData.gallery_title} onChange={e => setFormData({...formData, gallery_title: e.target.value})} className={inputCls} placeholder="বার্নিশ করার আগে ও পরের অবস্থা" />
+          </div>
+        </div>
+
         {/* Promo Banner Settings */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h3 className="text-xl font-bold mb-4 border-b pb-2">Home Page - Promotional Banner</h3>
+          <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-4">
+            Note: the promotional banner was removed from the home page. These fields are kept for reference but are no longer displayed.
+          </p>
           
           <div className="space-y-4">
             <div>

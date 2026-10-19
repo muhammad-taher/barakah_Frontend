@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Package, Settings, LogOut, Menu, X, Star } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Package, Settings, LogOut, Menu, X, Star, Images, AlignLeft } from 'lucide-react';
 import { useState } from 'react';
 
 export default function AdminLayout() {
@@ -72,6 +72,14 @@ export default function AdminLayout() {
           <Link to="/secure-hq/reviews" onClick={closeMobileMenu} className={linkCls('/secure-hq/reviews')}>
             <Star size={20} />
             <span>Customer Reviews</span>
+          </Link>
+          <Link to="/secure-hq/gallery" onClick={closeMobileMenu} className={linkCls('/secure-hq/gallery')}>
+            <Images size={20} />
+            <span>Before / After Gallery</span>
+          </Link>
+          <Link to="/secure-hq/content" onClick={closeMobileMenu} className={linkCls('/secure-hq/content')}>
+            <AlignLeft size={20} />
+            <span>Content Sections</span>
           </Link>
           <Link to="/secure-hq/settings" onClick={closeMobileMenu} className={linkCls('/secure-hq/settings')}>
             <Settings size={20} />
