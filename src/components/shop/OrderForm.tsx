@@ -192,16 +192,19 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
     }
   };
 
+  // Gradient border matching the top headline bar: a 3px padded wrapper behind
+  // an inset child, since a CSS border cannot itself take a gradient.
   return (
-    <div className="rounded-2xl border-2 border-zinc-800 overflow-hidden shadow-lg">
-      {/* Top Banner */}
-      <div className="bg-zinc-900 text-white py-4 px-4 text-center">
-        <h2 className="text-lg md:text-2xl font-bold">
-          অর্ডার কনফার্ম করতে নিচের ফর্মটি সঠিক তথ্য দিয়ে পূরণ করুন।
-        </h2>
-      </div>
+    <div className="rounded-2xl p-[3px] bg-gradient-to-r from-[#B5651D] via-[#E8883C] to-[#B5651D] shadow-lg">
+      <div className="rounded-[calc(1rem-3px)] overflow-hidden">
+        {/* Top Banner */}
+        <div className="bg-zinc-900 text-white py-4 px-4 text-center">
+          <h2 className="text-lg md:text-2xl font-bold">
+            অর্ডার কনফার্ম করতে নিচের ফর্মটি সঠিক তথ্য দিয়ে পূরণ করুন।
+          </h2>
+        </div>
 
-      <div className="bg-gray-50 px-4 py-8">
+        <div className="bg-gray-50 px-4 py-8">
         {/* Promotional copy sitting on the form background */}
         {promoText.trim() && (
           <div className="mb-8 text-center">
@@ -478,6 +481,7 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
             <MessageCircle className="w-5 h-5" />
             হোয়াটসঅ্যাপে মেসেজ দিন
           </a>
+        </div>
         </div>
       </div>
     </div>
