@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import adminApi, { API_URL } from '../../utils/adminApi';
 import { Trash2, Plus, Edit2, ArrowUp, ArrowDown, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface SectionForm {
   heading: string;
@@ -188,7 +189,9 @@ export default function AdminContent() {
                     <span className="w-5 h-5 rounded-full bg-[#E8883C] flex items-center justify-center shrink-0 mt-0.5">
                       <ArrowRight className="w-3 h-3 text-white" strokeWidth={3} />
                     </span>
-                    <span className="text-zinc-800 font-semibold text-sm">{bullet}</span>
+                    <div className="text-zinc-800 font-semibold text-sm break-words [&_p]:m-0 [&_strong]:font-extrabold [&_a]:underline [&_a]:text-orange-700">
+                      <ReactMarkdown>{bullet}</ReactMarkdown>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -227,6 +230,10 @@ export default function AdminContent() {
                 />
                 <p className="text-xs text-gray-400 mt-1">
                   Each line becomes one bullet with an orange arrow. Empty lines are ignored.
+                  Markdown works: <code className="bg-gray-100 px-1 rounded">**bold**</code>,{' '}
+                  <code className="bg-gray-100 px-1 rounded">*italic*</code>,{' '}
+                  <code className="bg-gray-100 px-1 rounded">[link](https://...)</code>.
+                  Font size is set in Settings.
                 </p>
               </div>
 

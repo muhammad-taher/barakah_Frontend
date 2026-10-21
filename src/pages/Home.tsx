@@ -56,6 +56,7 @@ export default function Home() {
   // Image shown just above the customer reviews; heading is optional.
   const comboImage = settings?.combo_image_url;
   const comboTitle = settings?.combo_title;
+  const contentFontSize = settings?.content_font_size || 'base';
 
   return (
     <div className="flex flex-col pb-0">
@@ -150,7 +151,14 @@ export default function Home() {
         <>
           <section className="max-w-6xl mx-auto px-4 w-full">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-center mb-6">{galleryTitle}</h2>
-            <ImageSlider images={galleryImages} aspectClass="aspect-[4/3]" maxWidthClass="max-w-4xl" />
+            {/* Width is also capped in vh so the frame always fits the screen height:
+                a 4:3 frame is 3/4 as tall as it is wide, so 80vh wide => 60vh tall. */}
+            <ImageSlider
+              images={galleryImages}
+              aspectClass="aspect-[4/3]"
+              maxWidthClass="max-w-[min(32rem,80vh)]"
+              objectFit="contain"
+            />
           </section>
 
           {/* Order CTA */}
@@ -164,7 +172,7 @@ export default function Home() {
       {contentSections.length > 0 && (
         <>
           <section className="max-w-4xl mx-auto px-4 w-full">
-            <ContentSections sections={contentSections} />
+            <ContentSections sections={contentSections} fontSize={contentFontSize} />
           </section>
 
           {/* Order CTA */}
@@ -198,7 +206,13 @@ export default function Home() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">কাস্টমার রিভিউ</h2>
             <p className="text-zinc-500">আমাদের সম্মানিত গ্রাহকদের মতামত</p>
           </div>
-          <ImageSlider images={reviews} aspectClass="aspect-[3/4]" maxWidthClass="max-w-lg" objectFit="contain" />
+          {/* 3:4 frame is 4/3 as tall as it is wide, so 45vh wide => 60vh tall. */}
+          <ImageSlider
+            images={reviews}
+            aspectClass="aspect-[3/4]"
+            maxWidthClass="max-w-[min(22rem,45vh)]"
+            objectFit="contain"
+          />
         </section>
       )}
 

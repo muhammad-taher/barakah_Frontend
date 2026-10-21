@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import adminApi, { API_URL } from '../../utils/adminApi';
 import { Save, ImagePlus } from 'lucide-react';
+import { CONTENT_FONT_SIZES } from '../../components/shop/ContentSections';
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
+    top_headline: '',
+    content_font_size: 'base',
     hero_image_url: '',
     promo_title: '',
     promo_subtitle: '',
@@ -40,6 +43,8 @@ export default function AdminSettings() {
   useEffect(() => {
     if (settings) {
       setFormData({
+        top_headline: settings.top_headline ?? '',
+        content_font_size: settings.content_font_size || 'base',
         hero_image_url: settings.hero_image_url || '',
         promo_title: settings.promo_title || '',
         promo_subtitle: settings.promo_subtitle || '',
@@ -113,6 +118,53 @@ export default function AdminSettings() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+        {/* Top headline bar */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Top Headline (black bar)</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            The main headline in the black bar at the very top of every customer page. Leave empty to hide the bar.
+          </p>
+          <input
+            type="text"
+            value={formData.top_headline}
+            onChange={e => setFormData({ ...formData, top_headline: e.target.value })}
+            className={inputCls}
+            placeholder="ঘরে বসেই আপনার পুরোনো ফার্নিচারকে দিন নতুন রূপ"
+          />
+          <div className="mt-3 bg-zinc-900 text-white rounded-lg py-3 px-4 text-center">
+            <span className="text-base sm:text-xl font-bold">
+              {formData.top_headline || 'ঘরে বসেই আপনার পুরোনো ফার্নিচারকে দিন নতুন রূপ'}
+            </span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">Preview. If never saved, the default text above is used.</p>
+        </div>
+
+        {/* Content section font size */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <h3 className="text-xl font-bold mb-4 border-b pb-2">Content Sections - Font Size</h3>
+          <p className="text-sm text-gray-500 mb-5">
+            Text size for the orange-heading bullet sections on the home page. Applies to all of them.
+            Edit the text itself on the <strong>Content Sections</strong> page.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {Object.entries(CONTENT_FONT_SIZES).map(([key, cfg]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setFormData({ ...formData, content_font_size: key })}
+                className={`border rounded-lg px-3 py-3 text-center transition-colors ${
+                  formData.content_font_size === key
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 font-semibold'
+                    : 'border-gray-200 hover:bg-gray-50 text-gray-700'
+                }`}
+              >
+                <span className={cfg.bullet}>অ</span>
+                <span className="block text-xs mt-1">{cfg.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Hero Section Settings */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <h3 className="text-xl font-bold mb-4 border-b pb-2">Home Page - Hero Section</h3>

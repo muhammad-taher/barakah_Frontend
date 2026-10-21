@@ -22,7 +22,7 @@ export default function OrderButton({ targetId = 'order-form', className = '' }:
     <button
       type="button"
       onClick={scrollToForm}
-      className={`bg-[#001B3A] border-2 sm:border-[3px] border-[#00BFFF] shadow-[0_0_12px_rgba(0,191,255,0.6)] sm:shadow-[0_0_15px_rgba(0,191,255,0.6)] text-white px-5 py-3 sm:px-8 sm:py-4 rounded-full font-extrabold hover:shadow-[0_0_25px_rgba(0,191,255,0.8)] hover:scale-105 transition-all duration-300 inline-flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg md:text-xl whitespace-nowrap animate-bounce ${className}`}
+      className={`bg-green-600 hover:bg-green-700 text-white border-2 border-green-700 shadow-lg shadow-green-600/30 px-5 py-3 sm:px-8 sm:py-4 rounded-full font-extrabold hover:shadow-xl hover:shadow-green-600/40 hover:scale-105 transition-all duration-200 inline-flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg md:text-xl whitespace-nowrap ${className}`}
     >
       <ShoppingCart className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 shrink-0" />
       <span className="whitespace-nowrap">অর্ডার করতে ক্লিক করুন</span>

@@ -1,35 +1,27 @@
-import { useState, useEffect } from 'react';
-import { X } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
+const DEFAULT_HEADLINE = 'ঘরে বসেই আপনার পুরোনো ফার্নিচারকে দিন নতুন রূপ';
+
+/** Black bar at the very top of the page carrying the main headline. */
 export default function AnnouncementBar() {
-  const [visible, setVisible] = useState(true);
+  const { data: settings } = useQuery({
+    queryKey: ['settings'],
+    queryFn: async () => {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/settings/`);
+      return res.data;
+    }
+  });
 
-  useEffect(() => {
-    const dismissed = sessionStorage.getItem('announcement-dismissed');
-    if (dismissed) setVisible(false);
-  }, []);
+  const headline: string = settings?.top_headline ?? DEFAULT_HEADLINE;
 
-  const dismiss = () => {
-    setVisible(false);
-    sessionStorage.setItem('announcement-dismissed', 'true');
-  };
-
-  if (!visible) return null;
+  if (!headline.trim()) return null;
 
   return (
-    <div className="bg-zinc-900 text-white text-xs py-2.5 text-center font-medium tracking-wide relative">
-      <div className="max-w-7xl mx-auto px-8">
-        <span className="inline-flex items-center gap-2">
-          🚚 সারাদেশে হোম ডেলিভারি &nbsp;|&nbsp; 💵 ক্যাশ অন ডেলিভারি &nbsp;|&nbsp; ✨ প্রিমিয়াম কোয়ালিটি প্রোডাক্ট
-        </span>
-      </div>
-      <button
-        onClick={dismiss}
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-white transition-colors"
-        aria-label="Dismiss"
-      >
-        <X className="w-3.5 h-3.5" />
-      </button>
+    <div className="bg-zinc-900 text-white py-3 sm:py-4 px-4 text-center">
+      <h1 className="max-w-4xl mx-auto text-base sm:text-xl md:text-2xl font-bold leading-snug break-words">
+        {headline}
+      </h1>
     </div>
   );
 }
