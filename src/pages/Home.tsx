@@ -67,7 +67,9 @@ export default function Home() {
             <img
               src={heroImage}
               alt="Barakah Collection"
-              className="w-full h-full object-cover object-center scale-105"
+              className="w-full h-full object-cover"
+              // Focal point chosen in Admin → Settings → Mobile Crop Position.
+              style={{ objectPosition: `${settings?.hero_focus_x ?? 50}% ${settings?.hero_focus_y ?? 50}%` }}
               loading="eager"
             />
           )}

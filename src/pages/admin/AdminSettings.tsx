@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import adminApi, { API_URL } from '../../utils/adminApi';
 import { Save, ImagePlus } from 'lucide-react';
 import { CONTENT_FONT_SIZES } from '../../components/shop/ContentSections';
+import HeroFocusPicker from '../../components/admin/HeroFocusPicker';
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
@@ -11,6 +12,8 @@ export default function AdminSettings() {
     top_headline: '',
     content_font_size: 'base',
     hero_image_url: '',
+    hero_focus_x: '50',
+    hero_focus_y: '50',
     promo_title: '',
     promo_subtitle: '',
     promo_link: '',
@@ -46,6 +49,8 @@ export default function AdminSettings() {
         top_headline: settings.top_headline ?? '',
         content_font_size: settings.content_font_size || 'base',
         hero_image_url: settings.hero_image_url || '',
+        hero_focus_x: settings.hero_focus_x ?? '50',
+        hero_focus_y: settings.hero_focus_y ?? '50',
         promo_title: settings.promo_title || '',
         promo_subtitle: settings.promo_subtitle || '',
         promo_link: settings.promo_link || '',
@@ -178,6 +183,18 @@ export default function AdminSettings() {
                 <input type="url" value={formData.hero_image_url} onChange={e => setFormData({...formData, hero_image_url: e.target.value})} className={`${inputCls} !mt-0 text-sm`} placeholder="Or paste image URL here..." />
                 {formData.hero_image_url && <img src={formData.hero_image_url} alt="Hero Preview" className="mt-2 h-40 object-cover rounded border" />}
               </div>
+            </div>
+
+            <div className="pt-4 border-t border-gray-100">
+              <label className={`${labelCls} mb-3 block`}>Mobile Crop Position</label>
+              <HeroFocusPicker
+                imageUrl={formData.hero_image_url}
+                x={Number(formData.hero_focus_x) || 50}
+                y={Number(formData.hero_focus_y) || 50}
+                onChange={(x, y) => setFormData(prev => ({
+                  ...prev, hero_focus_x: String(x), hero_focus_y: String(y),
+                }))}
+              />
             </div>
           </div>
         </div>

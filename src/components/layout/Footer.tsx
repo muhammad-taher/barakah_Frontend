@@ -4,55 +4,40 @@ import { Phone, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-zinc-950 text-zinc-400 pt-16 pb-8">
+    <footer className="bg-zinc-950 text-zinc-400 pt-8 pb-5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mb-14">
-          {/* Brand */}
-          <div>
-            <Link to="/" className="mb-6 hover:opacity-80 transition-opacity flex items-center gap-2 w-fit">
-              <img src="/logobarakah.png" alt="Barakah" className="h-14 object-contain" />
-              <span className="text-3xl font-bold tracking-tight text-white font-serif">Barakah</span>
-            </Link>
-            <p className="text-[15px] leading-relaxed mb-5 max-w-xs text-zinc-400">
-              সারাদেশে প্রিমিয়াম কোয়ালিটির প্রোডাক্ট আপনার দোরগোড়ায়। আপনার বিশ্বস্ত অনলাইন শপিং গন্তব্য।
-            </p>
-            <div className="space-y-3 text-[15px]">
-              <div className="flex items-center gap-3">
-                <Phone className="w-[18px] h-[18px] text-zinc-500" />
-                <span className="font-medium text-zinc-300">+8801353366144</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Mail className="w-[18px] h-[18px] text-zinc-500" />
-                <span className="text-zinc-300">support@barakah.com</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="w-[18px] h-[18px] text-zinc-500" />
-                <span className="text-zinc-300">ভালুকা, বাংলাদেশ</span>
-              </div>
-            </div>
-          </div>
+        {/* Brand + contact, side by side on desktop */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5">
+          <Link to="/" className="flex items-center gap-2 w-fit hover:opacity-80 transition-opacity">
+            <img src="/logobarakah.png" alt="Barakah" className="h-8 object-contain" />
+            <span className="text-xl font-bold tracking-tight text-white font-serif">Barakah</span>
+          </Link>
 
-          {/* Legal */}
-          <div>
-            <h4 className="font-semibold text-white text-[15px] mb-5">নীতিমালা</h4>
-            <ul className="space-y-3 text-[15px]">
-              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">প্রাইভেসি পলিসি</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">টার্মস অফ সার্ভিস</Link></li>
-              <li><Link to="#" className="hover:text-white transition-colors">রিফান্ড পলিসি</Link></li>
-            </ul>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+            <a href="tel:+8801353366144" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <Phone className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span>+8801353366144</span>
+            </a>
+            <span className="flex items-center gap-1.5">
+              <Mail className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span className="break-all">support@barakah.com</span>
+            </span>
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span>ভালুকা, বাংলাদেশ</span>
+            </span>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-zinc-500">© {new Date().getFullYear()} বারাকাহ। সর্বস্বত্ব সংরক্ষিত।</p>
-          <div className="flex items-center gap-6 text-sm text-zinc-400">
-            <span className="flex items-center gap-2">
-              💵 ক্যাশ অন ডেলিভারি
-            </span>
-            <span className="flex items-center gap-2">
-              🚚 সারাদেশে ডেলিভারি
-            </span>
+        <div className="border-t border-zinc-800 pt-4 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs">
+          <p className="text-zinc-500 text-center sm:text-left">
+            © {new Date().getFullYear()} বারাকাহ। সর্বস্বত্ব সংরক্ষিত।
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <Link to="/privacy-policy" className="hover:text-white transition-colors">প্রাইভেসি পলিসি</Link>
+            <span className="text-zinc-500">💵 ক্যাশ অন ডেলিভারি</span>
+            <span className="text-zinc-500">🚚 সারাদেশে ডেলিভারি</span>
           </div>
         </div>
       </div>
