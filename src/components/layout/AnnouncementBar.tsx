@@ -18,8 +18,10 @@ export default function AnnouncementBar() {
   if (!headline.trim()) return null;
 
   return (
-    <div className="bg-zinc-900 text-white py-3 sm:py-4 px-4 text-center">
-      <h1 className="max-w-4xl mx-auto text-base sm:text-xl md:text-2xl font-bold leading-snug break-words">
+    // Warm amber gradient picked to match the #E8883C section headings further
+    // down the page and the wood-varnish product itself.
+    <div className="bg-gradient-to-r from-[#B5651D] via-[#E8883C] to-[#B5651D] text-white py-3 sm:py-4 px-4 text-center shadow-md">
+      <h1 className="max-w-4xl mx-auto text-base sm:text-xl md:text-2xl font-bold leading-snug break-words drop-shadow-sm">
         {headline}
       </h1>
     </div>
