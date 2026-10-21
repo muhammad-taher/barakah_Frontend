@@ -197,8 +197,8 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
   return (
     <div className="rounded-2xl p-[3px] bg-gradient-to-r from-[#B5651D] via-[#E8883C] to-[#B5651D] shadow-lg">
       <div className="rounded-[calc(1rem-3px)] overflow-hidden">
-        {/* Top Banner */}
-        <div className="bg-zinc-900 text-white py-4 px-4 text-center">
+        {/* Top Banner — same #E8883C as the content-section headings */}
+        <div className="bg-[#E8883C] text-white py-4 px-4 text-center">
           <h2 className="text-lg md:text-2xl font-bold">
             অর্ডার কনফার্ম করতে নিচের ফর্মটি সঠিক তথ্য দিয়ে পূরণ করুন।
           </h2>
