@@ -60,29 +60,19 @@ export default function Home() {
 
   return (
     <div className="flex flex-col pb-0">
-      {/* Hero Section */}
-      <section className="relative h-[90vh] min-h-[600px] max-h-[900px] flex items-end justify-center pb-[15vh] overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-zinc-900">
-          {heroImage && (
-            <img
-              src={heroImage}
-              alt="Barakah Collection"
-              className="w-full h-full object-cover"
-              // Focal point chosen in Admin → Settings → Mobile Crop Position.
-              style={{ objectPosition: `${settings?.hero_focus_x ?? 50}% ${settings?.hero_focus_y ?? 50}%` }}
-              loading="eager"
-            />
-          )}
-        </div>
-        <div className="relative z-10 flex justify-center w-full">
+      {/* Hero: a contained, centred image shown in full — never cropped,
+          so any text inside the artwork stays readable on every screen. */}
+      <section className="max-w-xl mx-auto px-4 w-full pt-6 pb-8 md:pt-8 md:pb-10">
+        {heroImage && (
+          <img
+            src={heroImage}
+            alt="Barakah"
+            className="w-full h-auto rounded-2xl shadow-lg border border-zinc-200"
+            loading="eager"
+          />
+        )}
+        <div className="mt-6 flex justify-center">
           <OrderButton />
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-1.5">
-            <div className="w-1 h-2.5 bg-white/60 rounded-full animate-bounce" />
-          </div>
         </div>
       </section>
 

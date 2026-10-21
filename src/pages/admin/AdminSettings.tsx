@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import adminApi, { API_URL } from '../../utils/adminApi';
 import { Save, ImagePlus } from 'lucide-react';
 import { CONTENT_FONT_SIZES } from '../../components/shop/ContentSections';
-import HeroFocusPicker from '../../components/admin/HeroFocusPicker';
+import { HEADLINE_SIZES } from '../../components/layout/AnnouncementBar';
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
@@ -11,9 +11,8 @@ export default function AdminSettings() {
   const [formData, setFormData] = useState({
     top_headline: '',
     content_font_size: 'base',
+    top_headline_size: 'base',
     hero_image_url: '',
-    hero_focus_x: '50',
-    hero_focus_y: '50',
     promo_title: '',
     promo_subtitle: '',
     promo_link: '',
@@ -48,9 +47,8 @@ export default function AdminSettings() {
       setFormData({
         top_headline: settings.top_headline ?? '',
         content_font_size: settings.content_font_size || 'base',
+        top_headline_size: settings.top_headline_size || 'base',
         hero_image_url: settings.hero_image_url || '',
-        hero_focus_x: settings.hero_focus_x ?? '50',
-        hero_focus_y: settings.hero_focus_y ?? '50',
         promo_title: settings.promo_title || '',
         promo_subtitle: settings.promo_subtitle || '',
         promo_link: settings.promo_link || '',
@@ -136,12 +134,31 @@ export default function AdminSettings() {
             className={inputCls}
             placeholder="ঘরে বসেই আপনার পুরোনো ফার্নিচারকে দিন নতুন রূপ"
           />
-          <div className="mt-3 bg-zinc-900 text-white rounded-lg py-3 px-4 text-center">
-            <span className="text-base sm:text-xl font-bold">
+          <label className={`${labelCls} mt-5 mb-2 block`}>Font Size</label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {Object.entries(HEADLINE_SIZES).map(([key, cfg]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setFormData({ ...formData, top_headline_size: key })}
+                className={`border rounded-lg px-3 py-3 text-center transition-colors ${
+                  formData.top_headline_size === key
+                    ? 'border-blue-600 bg-blue-50 text-blue-700 font-semibold'
+                    : 'border-gray-200 hover:bg-gray-50 text-gray-700'
+                }`}
+              >
+                <span className={cfg.cls}>অ</span>
+                <span className="block text-xs mt-1">{cfg.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4 bg-gradient-to-r from-[#B5651D] via-[#E8883C] to-[#B5651D] text-white rounded-lg py-3 px-4 text-center">
+            <span className={`${(HEADLINE_SIZES[formData.top_headline_size] ?? HEADLINE_SIZES.base).cls} font-bold drop-shadow-sm`}>
               {formData.top_headline || 'ঘরে বসেই আপনার পুরোনো ফার্নিচারকে দিন নতুন রূপ'}
             </span>
           </div>
-          <p className="text-xs text-gray-400 mt-1">Preview. If never saved, the default text above is used.</p>
+          <p className="text-xs text-gray-400 mt-1">Live preview. If never saved, the default text above is used.</p>
         </div>
 
         {/* Content section font size */}
@@ -185,17 +202,6 @@ export default function AdminSettings() {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-100">
-              <label className={`${labelCls} mb-3 block`}>Mobile Crop Position</label>
-              <HeroFocusPicker
-                imageUrl={formData.hero_image_url}
-                x={Number(formData.hero_focus_x) || 50}
-                y={Number(formData.hero_focus_y) || 50}
-                onChange={(x, y) => setFormData(prev => ({
-                  ...prev, hero_focus_x: String(x), hero_focus_y: String(y),
-                }))}
-              />
-            </div>
           </div>
         </div>
 
