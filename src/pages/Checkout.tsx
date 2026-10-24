@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { ShoppingBag } from 'lucide-react';
 import { getCart, clearCart, type CartItem } from '../utils/cart';
+import { buildUserData, getMetaBrowserIds } from '../utils/tracking';
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -53,12 +54,15 @@ export default function Checkout() {
       return;
     }
     setIsSubmitting(true);
-    
+
+    const userData = buildUserData({ name, phone, district, division });
+
     // Fire add_payment_info event (COD is default)
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({
       event: 'add_payment_info',
+      user_data: userData,
       ecommerce: {
         currency: 'BDT',
         value: total,
@@ -75,15 +79,23 @@ export default function Checkout() {
     try {
       const items = cartItems.map(item => ({ product_id: Number(item.id), quantity: item.quantity }));
       const fullAddress = `${address}, ${area}, ${district}, ${division}`;
+      const { fbp, fbc } = getMetaBrowserIds();
       const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/orders/checkout`, {
         customer_name: name,
         phone,
         address: fullAddress,
-        items
+        division,
+        district,
+        items,
+        // Forwarded so the server-side Conversions API event can match the user
+        fbp,
+        fbc,
+        event_source_url: window.location.href,
       });
       const purchaseData = {
         orderNumber: res.data.order_number,
         totalAmount: res.data.total_amount,
+        userData,
         items: cartItems.map(item => ({
           item_id: String(item.id),
           item_name: item.name,

@@ -1,10 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 import { CheckCircle } from 'lucide-react';
+import { buildMetaContents } from '../utils/tracking';
 
 export default function OrderSuccess() {
   const location = useLocation();
-  const state = location.state as { orderNumber?: string; totalAmount?: number; items?: any[] } | null;
+  const state = location.state as {
+    orderNumber?: string;
+    totalAmount?: number;
+    items?: any[];
+    userData?: Record<string, string>;
+  } | null;
   const purchaseFiredRef = useRef(false);
 
   useEffect(() => {
@@ -20,17 +26,28 @@ export default function OrderSuccess() {
       sessionStorage.setItem(storageKey, '1');
 
       // Push ecommerce purchase event to dataLayer
+      const items = state.items || [];
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object
       window.dataLayer.push({
         event: 'purchase',
         event_id: state.orderNumber,
+        // GA4-style block — unchanged
         ecommerce: {
           transaction_id: state.orderNumber,
           value: state.totalAmount,
           currency: 'BDT',
-          items: state.items || []
-        }
+          items
+        },
+        // Advanced matching for the Meta Pixel (normalised, unhashed — the Pixel hashes)
+        user_data: state.userData || {},
+        // Meta-format product fields; GA4 `items` alone is not what the Pixel expects
+        meta: {
+          order_id: state.orderNumber,
+          value: state.totalAmount,
+          currency: 'BDT',
+          ...buildMetaContents(items),
+        },
       });
     }
   }, [state]);

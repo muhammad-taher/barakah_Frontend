@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import { MessageCircle } from 'lucide-react';
+import { buildUserData, getMetaBrowserIds } from '../../utils/tracking';
 
 interface SelectedPackage {
   packageId: number;
@@ -146,12 +147,16 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
     }
     setIsSubmitting(true);
 
+    // Advanced-matching data, available now that the billing form is filled
+    const userData = buildUserData({ name, phone, district, division });
+
     // Fire add_payment_info event
     const items = getSelectedItems();
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({
       event: 'add_payment_info',
+      user_data: userData,
       ecommerce: {
         currency: 'BDT',
         value: total,
@@ -167,15 +172,23 @@ export default function OrderForm({ defaultPackageId }: OrderFormProps) {
 
     try {
       const fullAddress = `${address}, ${district}, ${division}`;
+      const { fbp, fbc } = getMetaBrowserIds();
       const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000'}/api/v1/orders/package-checkout`, {
         customer_name: name,
         phone,
         address: fullAddress,
-        packages: selectedPackages.map(sp => ({ package_id: sp.packageId, quantity: sp.quantity }))
+        division,
+        district,
+        packages: selectedPackages.map(sp => ({ package_id: sp.packageId, quantity: sp.quantity })),
+        // Forwarded so the server-side Conversions API event can match the user
+        fbp,
+        fbc,
+        event_source_url: window.location.href,
       });
       const purchaseData = {
         orderNumber: res.data.order_number,
         totalAmount: res.data.total_amount,
+        userData,
         items: getSelectedItems().map((item: any) => ({
           item_id: String(item.pkg.id),
           item_name: item.pkg.headline || item.pkg.name,
